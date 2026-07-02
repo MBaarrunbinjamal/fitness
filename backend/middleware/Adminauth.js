@@ -1,14 +1,25 @@
-var express = require('express');
-var jwt = require('jsonwebtoken');
-var { MongoClient } = require('mongodb');
-require('dotenv').config();
+// middleware/adminauth.js
+module.exports = (req, res, next) => {
+    try {
+        if (!req.user) {
+            return res.status(401).json({
+                success: false,
+                message: 'Authentication required'
+            });
+        }
 
-var mongoserver = new MongoClient(process.env.MONGO_URL);
-var secretkey = process.env.SECRET_KEY;
-var bcrypt = require('bcrypt');
+        if (req.user.role !== 'admin') {
+            return res.status(403).json({
+                success: false,
+                message: 'Admin access required'
+            });
+        }
 
-var db = mongoserver.db(process.env.DB_NAME);
-
-module.exports={
-    
+        next();
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Server error'
+        });
+    }
 };
