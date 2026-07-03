@@ -35,14 +35,6 @@ exports.login = async (req, res) => {
             });
         }
 
-        // Check status
-        if (user.status === 'inactive') {
-            return res.status(403).json({
-                success: false,
-                message: 'Account is deactivated. Please contact admin.'
-            });
-        }
-
         // Generate JWT
         const token = jwt.sign(
             { id: user._id, username: user.username },
@@ -50,7 +42,7 @@ exports.login = async (req, res) => {
             { expiresIn: '7d' }
         );
 
-        // Remove password from response
+        // Remove password
         delete user.password;
 
         res.json({
@@ -64,21 +56,14 @@ exports.login = async (req, res) => {
         console.error('Login error:', error);
         res.status(500).json({
             success: false,
-            message: 'Server error during login'
+            message: 'Server error'
         });
     }
 };
 
 exports.logout = async (req, res) => {
-    try {
-        res.json({
-            success: true,
-            message: 'Logged out successfully'
-        });
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: 'Server error during logout'
-        });
-    }
+    res.json({
+        success: true,
+        message: 'Logged out successfully'
+    });
 };
