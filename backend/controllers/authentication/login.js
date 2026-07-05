@@ -1,13 +1,12 @@
-// controllers/authentication/login.js
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+// Login User
 exports.login = async (req, res) => {
     try {
         const { username, password } = req.body;
         const db = req.db;
 
-        // Validation
         if (!username || !password) {
             return res.status(400).json({
                 success: false,
@@ -15,7 +14,6 @@ exports.login = async (req, res) => {
             });
         }
 
-        // Find user
         const user = await db.collection('users').findOne({ username });
 
         if (!user) {
@@ -25,7 +23,20 @@ exports.login = async (req, res) => {
             });
         }
 
-        // Check password
+        if (!user.isVerified) {
+            return res.status(403).json({
+                success: false,
+                message: 'Please verify your email first'
+            });
+        }
+
+        if (user.status === 'inactive') {
+            return res.status(403).json({
+                success: false,
+                message: 'Account is deactivated'
+            });
+        }
+
         const isMatch = await bcrypt.compare(password, user.password);
 
         if (!isMatch) {
@@ -35,14 +46,12 @@ exports.login = async (req, res) => {
             });
         }
 
-        // Generate JWT
         const token = jwt.sign(
             { id: user._id, username: user.username },
             process.env.SECRET_KEY,
             { expiresIn: '7d' }
         );
 
-        // Remove password
         delete user.password;
 
         res.json({
@@ -61,6 +70,7 @@ exports.login = async (req, res) => {
     }
 };
 
+// Logout
 exports.logout = async (req, res) => {
     res.json({
         success: true,

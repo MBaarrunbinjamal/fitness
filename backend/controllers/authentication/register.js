@@ -1,13 +1,14 @@
-// controllers/authentication/register.js
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
+const { sendVerificationEmail } = require('../../utils/email');
 
+// Register User
 exports.register = async (req, res) => {
     try {
         const { username, email, password, fullName } = req.body;
         const db = req.db;
 
-        // Validation
         if (!username || !email || !password) {
             return res.status(400).json({
                 success: false,
@@ -15,7 +16,6 @@ exports.register = async (req, res) => {
             });
         }
 
-        // Check existing user
         const existingUser = await db.collection('users').findOne({
             $or: [{ username }, { email }]
         });
@@ -27,35 +27,33 @@ exports.register = async (req, res) => {
             });
         }
 
-        // Hash password
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        // Create user
+        const verificationToken = crypto.randomBytes(32).toString('hex');
+        const verificationExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000);
+
         const newUser = {
             username,
             email,
             password: hashedPassword,
             fullName: fullName || username,
             role: 'user',
-            status: 'active',
+            status: 'pending',
+            isVerified: false,
+            verificationToken: verificationToken,
+            verificationExpiry: verificationExpiry,
             createdAt: new Date(),
             updatedAt: new Date()
         };
 
         const result = await db.collection('users').insertOne(newUser);
 
-        // Generate JWT
-        const token = jwt.sign(
-            { id: result.insertedId, username },
-            process.env.SECRET_KEY,
-            { expiresIn: '7d' }
-        );
+        await sendVerificationEmail(email, verificationToken);
 
         res.status(201).json({
             success: true,
-            message: 'User registered successfully',
-            token,
+            message: 'User registered successfully. Please verify your email.',
             user: {
                 id: result.insertedId,
                 username,

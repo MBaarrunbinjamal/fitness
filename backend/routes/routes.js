@@ -1,9 +1,11 @@
-// routes/routes.js
 const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/auth');
+
 const loginController = require('../controllers/authentication/login');
 const registerController = require('../controllers/authentication/register');
+const verifyEmailController = require('../controllers/authentication/verifyEmail');
+const forgotPasswordController = require('../controllers/authentication/forgotPassword');
 
 // Register
 router.post('/auth/register', registerController.register);
@@ -11,10 +13,22 @@ router.post('/auth/register', registerController.register);
 // Login
 router.post('/auth/login', loginController.login);
 
-// Logout (Protected)
+// Logout
 router.post('/auth/logout', auth, loginController.logout);
 
-// Test Route (Protected)
+// Verify Email
+router.get('/auth/verify-email', verifyEmailController.verifyEmail);
+
+// Resend Verification
+router.post('/auth/resend-verification', verifyEmailController.resendVerification);
+
+// Forgot Password
+router.post('/auth/forgot-password', forgotPasswordController.forgotPassword);
+
+// Reset Password
+router.post('/auth/reset-password', forgotPasswordController.resetPassword);
+
+// Get Current User (Protected)
 router.get('/auth/me', auth, (req, res) => {
     res.json({
         success: true,
