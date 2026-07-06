@@ -16,7 +16,7 @@ module.exports = async (req, res, next) => {
         const db = req.db;
 
         const user = await db.collection('users').findOne(
-            { _id: new ObjectId(decoded.id) },
+            { _id: new ObjectId(decoded.id) }, // fixed: "id" not "userId"
             { projection: { password: 0 } }
         );
 
@@ -44,6 +44,7 @@ module.exports = async (req, res, next) => {
                 message: 'Token expired'
             });
         }
+        console.error('Auth middleware error:', error); // add this too, helps future debugging
         res.status(500).json({
             success: false,
             message: 'Server error'

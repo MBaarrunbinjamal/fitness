@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/auth');
-
+var user=require('../controllers/user/user');
 const loginController = require('../controllers/authentication/login');
 const registerController = require('../controllers/authentication/register');
 const verifyEmailController = require('../controllers/authentication/verifyEmail');
 const forgotPasswordController = require('../controllers/authentication/forgotPassword');
+const { getUser, updateUser, upload } = require('../controllers/user/user');
 
 // Register
 router.post('/auth/register', registerController.register);
@@ -35,5 +36,8 @@ router.get('/auth/me', auth, (req, res) => {
         user: req.user
     });
 });
+router.get('/getuser',auth,user.getUser);
+router.put('/update', auth, upload.single('profilePicture'), updateUser);
+
 
 module.exports = router;

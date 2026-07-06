@@ -6,13 +6,20 @@ const { sendVerificationEmail } = require('../../utils/email');
 // Register User
 exports.register = async (req, res) => {
     try {
-        const { username, email, password, fullName } = req.body;
+        const { username, email, password, confirmpassword } = req.body;
         const db = req.db;
 
-        if (!username || !email || !password) {
+        if (!username || !email || !password || !confirmpassword) {
             return res.status(400).json({
                 success: false,
-                message: 'Username, email and password are required'
+                message: 'All fields are required'
+            });
+        }
+
+        if (password !== confirmpassword) {
+            return res.status(400).json({
+                success: false,
+                message: 'Passwords do not match'
             });
         }
 
@@ -37,7 +44,6 @@ exports.register = async (req, res) => {
             username,
             email,
             password: hashedPassword,
-            fullName: fullName || username,
             role: 'user',
             status: 'pending',
             isVerified: false,
@@ -49,22 +55,24 @@ exports.register = async (req, res) => {
 
         const result = await db.collection('users').insertOne(newUser);
 
-        await sendVerificationEmail(email, verificationToken);
+        // Fire-and-forget: don't let email failures block registration
+        sendVerificationEmail(email, verificationToken).catch(err => {
+            console.error('Failed to send verification email:', err);
+        });
 
-        res.status(201).json({
+        return res.status(201).json({
             success: true,
             message: 'User registered successfully. Please verify your email.',
             user: {
                 id: result.insertedId,
                 username,
-                email,
-                fullName: newUser.fullName
+                email
             }
         });
 
     } catch (error) {
         console.error('Register error:', error);
-        res.status(500).json({
+        return res.status(500).json({
             success: false,
             message: 'Server error'
         });
