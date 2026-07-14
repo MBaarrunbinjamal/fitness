@@ -1,0 +1,254 @@
+.forge-login-wrap {
+          --bg: #050505;
+          --card: #111111;
+          --card-border: rgba(255, 255, 255, 0.07);
+          --accent: #ff4d00;
+          --accent-2: #ff7a00;
+          --text: #ffffff;
+          --muted: #bdbdbd;
+          --success: #00e676;
+          --danger: #ff5252;
+          --gradient: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+          --font-display: 'Bebas Neue', sans-serif;
+          --font-body: 'Poppins', sans-serif;
+          --ease: cubic-bezier(0.16, 1, 0.3, 1);
+ 
+          font-family: var(--font-body);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          min-height: 100vh;
+          padding: 40px 20px;
+          background: var(--bg);
+        }
+ 
+        .forge-login-card {
+          width: 100%;
+          max-width: 420px;
+          background: var(--card);
+          border: 1px solid var(--card-border);
+          border-radius: 20px;
+          padding: 2.6rem 2.2rem;
+          box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+        }
+ 
+        .forge-login-eyebrow {
+          font-weight: 600;
+          font-size: 0.78rem;
+          letter-spacing: 0.28em;
+          text-transform: uppercase;
+          color: var(--accent);
+          margin-bottom: 0.8rem;
+        }
+ 
+        .forge-login-title {
+          font-family: var(--font-display);
+          text-transform: uppercase;
+          letter-spacing: 0.02em;
+          font-size: 2.4rem;
+          color: var(--text);
+          line-height: 1;
+          margin: 0 0 0.5rem;
+        }
+ 
+        .forge-login-sub {
+          color: var(--muted);
+          font-size: 0.92rem;
+          margin: 0 0 2rem;
+        }
+ 
+        .forge-field {
+          margin-bottom: 1.2rem;
+        }
+ 
+        .forge-label {
+          display: block;
+          color: var(--muted);
+          font-size: 0.82rem;
+          margin-bottom: 0.5rem;
+        }
+ 
+        .forge-input-group {
+          position: relative;
+        }
+ 
+        .forge-input {
+          width: 100%;
+          background: #0b0b0b;
+          border: 1px solid var(--card-border);
+          color: var(--text);
+          border-radius: 12px;
+          padding: 0.85rem 1.1rem;
+          font-family: var(--font-body);
+          font-size: 0.95rem;
+          transition: border-color 0.3s var(--ease), box-shadow 0.3s var(--ease);
+        }
+ 
+        .forge-input.has-toggle {
+          padding-right: 2.8rem;
+        }
+ 
+        .forge-input::placeholder { color: #555; }
+ 
+        .forge-input:focus {
+          outline: none;
+          border-color: var(--accent);
+          box-shadow: 0 0 0 4px rgba(255, 77, 0, 0.15);
+        }
+ 
+        .forge-toggle-visibility {
+          position: absolute;
+          right: 0.9rem;
+          top: 50%;
+          transform: translateY(-50%);
+          background: none;
+          border: none;
+          color: var(--muted);
+          font-size: 0.8rem;
+          cursor: pointer;
+          padding: 4px;
+        }
+ 
+        .forge-toggle-visibility:hover { color: var(--accent); }
+ 
+        .forge-login-row {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin: 0.4rem 0 1.6rem;
+          font-size: 0.85rem;
+        }
+ 
+        .forge-remember {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          color: var(--muted);
+          cursor: pointer;
+          user-select: none;
+        }
+ 
+        .forge-remember input {
+          accent-color: var(--accent);
+          width: 15px;
+          height: 15px;
+          cursor: pointer;
+        }
+ 
+        .forge-forgot {
+          color: var(--accent);
+          text-decoration: none;
+          font-weight: 600;
+          background: none;
+          border: none;
+          font-size: 0.85rem;
+          cursor: pointer;
+          font-family: var(--font-body);
+        }
+ 
+        .forge-forgot:hover { color: var(--accent-2); }
+ 
+        .forge-error {
+          color: var(--danger);
+          font-size: 0.85rem;
+          margin: -0.6rem 0 1.2rem;
+        }
+ 
+        .forge-success {
+          color: var(--success);
+          font-size: 0.85rem;
+          margin: -0.6rem 0 1.2rem;
+        }
+ 
+        .forge-submit {
+          width: 100%;
+          border: none;
+          border-radius: 100px;
+          background: var(--gradient);
+          color: #fff;
+          font-family: var(--font-body);
+          font-weight: 600;
+          font-size: 0.95rem;
+          padding: 0.9rem 1.9rem;
+          cursor: pointer;
+          box-shadow: 0 8px 30px rgba(255, 77, 0, 0.25);
+          transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+        }
+ 
+        .forge-submit:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 14px 40px rgba(255, 77, 0, 0.4);
+        }
+ 
+        .forge-divider {
+          display: flex;
+          align-items: center;
+          gap: 0.8rem;
+          margin: 1.8rem 0;
+          color: #555;
+          font-size: 0.78rem;
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+        }
+ 
+        .forge-divider::before,
+        .forge-divider::after {
+          content: '';
+          flex: 1;
+          height: 1px;
+          background: var(--card-border);
+        }
+ 
+        .forge-signup-text {
+          text-align: center;
+          color: var(--muted);
+          font-size: 0.9rem;
+          margin: 0;
+        }
+ 
+        .forge-signup-text a {
+          color: var(--accent);
+          font-weight: 600;
+          text-decoration: none;
+        }
+ 
+        .forge-signup-text a:hover { color: var(--accent-2); }
+
+
+        /* go back to home button */
+         .forge-back-home {
+          position: fixed;
+          top: 24px;
+          left: 24px;
+          display: inline-flex;
+          align-items: center;
+          gap: 0.5rem;
+          background: rgba(17, 17, 17, 0.7);
+          border: 1px solid rgba(255, 255, 255, 0.07);
+          backdrop-filter: blur(12px);
+          color: #ffffff;
+          font-family: 'Poppins', sans-serif;
+          font-weight: 600;
+          font-size: 0.85rem;
+          padding: 0.65rem 1.2rem;
+          border-radius: 100px;
+          cursor: pointer;
+          text-decoration: none;
+          z-index: 999;
+          transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                      border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                      box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+ 
+        .forge-back-home:hover {
+          transform: translateY(-3px);
+          border-color: #ff4d00;
+          color: #ffffff;
+          box-shadow: 0 10px 30px rgba(255, 77, 0, 0.25);
+        }
+ 
+        .forge-back-home svg {
+          width: 16px;
+          height: 16px;
+          stroke: #ff4d00;
+        }
