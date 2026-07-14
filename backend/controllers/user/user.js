@@ -1,11 +1,11 @@
-var path = require('path');
-var { ObjectId } = require('mongodb');
-var multer = require('multer');
-var fs = require('fs');
+const path = require('path');
+const { ObjectId } = require('mongodb');
+const multer = require('multer');
+const fs = require('fs');
 
-var diskStorage = multer.diskStorage({
+const diskStorage = multer.diskStorage({
     destination: function (req, file, cb) {
-        var dir = 'uploads/profile-pics';
+        const dir = 'uploads/profile-pics';
         if (!fs.existsSync(dir)) {
             fs.mkdirSync(dir, { recursive: true });
         }
@@ -16,8 +16,8 @@ var diskStorage = multer.diskStorage({
     }
 });
 
-var fileFilter = (req, file, cb) => {
-    var allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+const fileFilter = (req, file, cb) => {
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
     if (allowedTypes.includes(file.mimetype)) {
         cb(null, true);
     } else {
@@ -25,12 +25,11 @@ var fileFilter = (req, file, cb) => {
     }
 };
 
-var upload = multer({
+const upload = multer({
     storage: diskStorage,
     limits: { fileSize: 5 * 1024 * 1024 }, // 5MB max
     fileFilter
 });
-
 
 async function getUser(req, res) {
     try {
@@ -41,13 +40,12 @@ async function getUser(req, res) {
     }
 }
 
-
 async function updateUser(req, res) {
     try {
-        var db = req.db;
-        var userId = req.user._id;
+        const db = req.db;
+        const userId = req.user._id;
 
-        var {
+        const {
             username,
             fullName,
             height,
@@ -61,7 +59,7 @@ async function updateUser(req, res) {
             unitPreference
         } = req.body;
 
-        var updateFields = { updatedAt: new Date() };
+        const updateFields = { updatedAt: new Date() };
 
         if (username !== undefined) updateFields.username = username;
         if (fullName !== undefined) updateFields.fullName = fullName;
@@ -75,8 +73,9 @@ async function updateUser(req, res) {
         if (targetWeight !== undefined) updateFields.targetWeight = targetWeight;
         if (unitPreference !== undefined) updateFields.unitPreference = unitPreference;
 
+        // Check if username already exists
         if (username) {
-            var existingUser = await db.collection('users').findOne({
+            const existingUser = await db.collection('users').findOne({
                 username,
                 _id: { $ne: new ObjectId(userId) }
             });
@@ -89,7 +88,7 @@ async function updateUser(req, res) {
             }
         }
 
-        var oldProfilePicToDelete = null;
+        let oldProfilePicToDelete = null;
 
         if (req.file) {
             updateFields.profilePicture = `/uploads/profile-pics/${req.file.filename}`;
@@ -102,7 +101,7 @@ async function updateUser(req, res) {
             }
         }
 
-        var result = await db.collection('users').findOneAndUpdate(
+        const result = await db.collection('users').findOneAndUpdate(
             { _id: new ObjectId(userId) },
             { $set: updateFields },
             {
@@ -118,6 +117,7 @@ async function updateUser(req, res) {
             });
         }
 
+        // Delete old profile picture if exists
         if (oldProfilePicToDelete) {
             fs.unlink(oldProfilePicToDelete, (err) => {
                 if (err && err.code !== 'ENOENT') {
