@@ -1,7 +1,10 @@
 const express = require('express');
 const { MongoClient } = require('mongodb');
 const cors = require('cors');
+const cron = require('node-cron');
 require('dotenv').config();
+
+const { expireOldSubscriptions } = require('./utils/subscriptions'); // adjust path to wherever you put it
 
 const app = express();
 app.use(express.json());
@@ -15,6 +18,17 @@ async function connectDB() {
         await client.connect();
         db = client.db(process.env.DB_NAME);
         console.log('MongoDB connected successfully');
+
+        // set up cron only after db is ready
+        cron.schedule('0 0 * * *', async () => {
+            console.log('Running subscription expiry check...');
+            try {
+                await expireOldSubscriptions(db);
+            } catch (err) {
+                console.error('Error running subscription expiry check:', err);
+            }
+        });
+
     } catch (error) {
         console.error('MongoDB connection error:', error);
         process.exit(1);

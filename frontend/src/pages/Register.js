@@ -1,9 +1,9 @@
 import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import "./Register.css";
-import { Link } from "react-router-dom";
- 
+
 export default function RegisterForm() {
-  const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -11,41 +11,35 @@ export default function RegisterForm() {
   const [showConfirm, setShowConfirm] = useState(false);
   const [agreed, setAgreed] = useState(false);
   const [error, setError] = useState("");
-  const [submitted, setSubmitted] = useState(false);
- 
+  const navigate = useNavigate();
+
   const handleSubmit = (e) => {
     e.preventDefault();
- 
-    if (!name || !email || !password || !confirmPassword) {
-      setError("Please fill in all fields.");
-      setSubmitted(false);
-      return;
-    }
-    if (password.length < 8) {
-      setError("Password must be at least 8 characters.");
-      setSubmitted(false);
-      return;
-    }
-    if (password !== confirmPassword) {
-      setError("Passwords do not match.");
-      setSubmitted(false);
-      return;
-    }
-    if (!agreed) {
-      setError("Please agree to the Terms & Conditions.");
-      setSubmitted(false);
-      return;
-    }
- 
     setError("");
-    setSubmitted(true);
-    // Hook up your real registration API call here.
-    console.log("Register attempt:", { name, email, password });
+
+    const obj = { username, email, password, confirmPassword };
+
+    fetch('http://localhost:5000/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(obj)
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+navigate(`/verify-email?email=${encodeURIComponent(email)}`);
+        } else {
+          setError(data.message);
+        }
+      })
+      .catch(err => {
+        console.log('something went wrong', err);
+        setError('Something went wrong. Please try again.');
+      });
   };
- 
+
   return (
     <>
-      {/* go back to home button */}
       <Link to="/" className="forge-back-home">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M3 12l9-9 9 9" />
@@ -59,7 +53,7 @@ export default function RegisterForm() {
           <p className="forge-register-eyebrow">Join Forge</p>
           <h1 className="forge-register-title">Create Account</h1>
           <p className="forge-register-sub">Start your transformation today.</p>
- 
+
           <form onSubmit={handleSubmit} noValidate>
             <div className="forge-field">
               <label className="forge-label" htmlFor="regName">Full Name</label>
@@ -69,12 +63,12 @@ export default function RegisterForm() {
                   type="text"
                   className="forge-input"
                   placeholder="John Doe"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                 />
               </div>
             </div>
- 
+
             <div className="forge-field">
               <label className="forge-label" htmlFor="regEmail">Email</label>
               <div className="forge-input-group">
@@ -88,7 +82,7 @@ export default function RegisterForm() {
                 />
               </div>
             </div>
- 
+
             <div className="forge-field">
               <label className="forge-label" htmlFor="regPassword">Password</label>
               <div className="forge-input-group">
@@ -111,7 +105,7 @@ export default function RegisterForm() {
               </div>
               <p className="forge-hint">Must be at least 8 characters.</p>
             </div>
- 
+
             <div className="forge-field">
               <label className="forge-label" htmlFor="regConfirmPassword">Confirm Password</label>
               <div className="forge-input-group">
@@ -133,7 +127,7 @@ export default function RegisterForm() {
                 </button>
               </div>
             </div>
- 
+
             <div className="forge-terms-row">
               <label className="forge-terms">
                 <input
@@ -147,17 +141,14 @@ export default function RegisterForm() {
                 </span>
               </label>
             </div>
- 
+
             {error && <p className="forge-error">{error}</p>}
-            {submitted && !error && (
-              <p className="forge-success">Account created successfully.</p>
-            )}
- 
+
             <button type="submit" className="forge-submit">Create Account</button>
           </form>
- 
+
           <div className="forge-divider">or</div>
- 
+
           <p className="forge-signin-text">
             Already have an account? <Link to="/login">Login In</Link>
           </p>
@@ -166,4 +157,3 @@ export default function RegisterForm() {
     </>
   );
 }
- 

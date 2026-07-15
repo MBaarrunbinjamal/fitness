@@ -1,0 +1,80 @@
+/* Extends the existing Forge theme (see Register.css for base tokens:
+   dark background, orange #ff6a1a-ish accent, rounded card).
+   Only new rules for the verify-email states live here. */
+
+.forge-verify-card {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.forge-verify-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 8px 0 20px;
+}
+
+.forge-verify-icon svg {
+  width: 28px;
+  height: 28px;
+}
+
+/* Verifying state — neutral, spinning ring */
+.forge-verify-spin {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.forge-verify-spin svg {
+  animation: forge-spin 1s linear infinite;
+}
+
+@keyframes forge-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Success state — orange, matches brand accent */
+.forge-verify-success {
+  background: rgba(255, 106, 26, 0.12);
+  border: 1px solid rgba(255, 106, 26, 0.4);
+  color: #ff6a1a;
+  box-shadow: 0 0 24px rgba(255, 106, 26, 0.25);
+}
+
+/* Failure / expired state — muted red, stays within the dark palette */
+.forge-verify-fail {
+  background: rgba(220, 60, 50, 0.1);
+  border: 1px solid rgba(220, 60, 50, 0.35);
+  color: #e05a4e;
+}
+
+.forge-verify-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  margin-top: 8px;
+  width: 100%;
+}
+
+.forge-verify-cta:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .forge-verify-spin svg {
+    animation: none;
+  }
+}

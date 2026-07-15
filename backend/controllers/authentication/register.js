@@ -6,17 +6,17 @@ const { sendVerificationEmail } = require('../../utils/email');
 // Register User
 exports.register = async (req, res) => {
     try {
-        const { username, email, password, confirmpassword } = req.body;
+        const { username, email, password, confirmPassword } = req.body;
         const db = req.db;
 
-        if (!username || !email || !password || !confirmpassword) {
+        if (!username || !email || !password || !confirmPassword) {
             return res.status(400).json({
                 success: false,
                 message: 'All fields are required'
             });
         }
 
-        if (password !== confirmpassword) {
+        if (password !== confirmPassword) {
             return res.status(400).json({
                 success: false,
                 message: 'Passwords do not match'
@@ -46,6 +46,7 @@ exports.register = async (req, res) => {
             password: hashedPassword,
             role: 'user',
             status: 'pending',
+            subscriber: false,
             isVerified: false,
             verificationToken: verificationToken,
             verificationExpiry: verificationExpiry,

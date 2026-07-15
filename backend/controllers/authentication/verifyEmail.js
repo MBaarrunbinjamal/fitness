@@ -1,6 +1,9 @@
 const { ObjectId } = require('mongodb');
+const jwt = require('jsonwebtoken');
 
+// =====================================
 // Verify Email
+// =====================================
 exports.verifyEmail = async (req, res) => {
     try {
         const { token } = req.query;
@@ -25,34 +28,65 @@ exports.verifyEmail = async (req, res) => {
             });
         }
 
+        // Activate account
         await db.collection('users').updateOne(
-            { _id: new ObjectId(user._id) },
-            { 
-                $set: { 
-                    isVerified: true, 
+            { _id: user._id },
+            {
+                $set: {
+                    isVerified: true,
                     status: 'active',
-                    verificationToken: null,
-                    verificationExpiry: null,
                     updatedAt: new Date()
-                } 
+                },
+                $unset: {
+                    verificationToken: "",
+                    verificationExpiry: ""
+                }
             }
         );
 
-        res.json({
+        // Generate JWT
+        const jwtToken = jwt.sign(
+            {
+                id: user._id,
+                username: user.username,
+                email: user.email,
+                role: user.role
+            },
+            process.env.SECRET_KEY,
+            {
+                expiresIn: '7d'
+            }
+        );
+
+        // Remove sensitive fields before sending user
+        delete user.password;
+        delete user.verificationToken;
+        delete user.verificationExpiry;
+
+        // Update returned user object
+        user.isVerified = true;
+        user.status = "active";
+
+        return res.status(200).json({
             success: true,
-            message: 'Email verified successfully. You can now login.'
+            message: "Email verified successfully.",
+            token: jwtToken,
+            user
         });
 
     } catch (error) {
-        console.error('Verify email error:', error);
-        res.status(500).json({
+        console.error("Verify email error:", error);
+
+        return res.status(500).json({
             success: false,
-            message: 'Server error'
+            message: "Server error"
         });
     }
 };
 
-// API: Resend Verification Email
+// =====================================
+// Resend Verification Email
+// =====================================
 exports.resendVerification = async (req, res) => {
     try {
         const { email } = req.body;
@@ -67,7 +101,9 @@ exports.resendVerification = async (req, res) => {
             });
         }
 
-        const user = await db.collection('users').findOne({ email });
+        const user = await db.collection('users').findOne({
+            email: email.trim().toLowerCase()
+        });
 
         if (!user) {
             return res.status(404).json({
@@ -83,32 +119,35 @@ exports.resendVerification = async (req, res) => {
             });
         }
 
-        const newToken = crypto.randomBytes(32).toString('hex');
-        const newExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000);
+        const verificationToken = crypto.randomBytes(32).toString('hex');
+        const verificationExpiry = new Date(
+            Date.now() + 24 * 60 * 60 * 1000
+        );
 
         await db.collection('users').updateOne(
-            { _id: new ObjectId(user._id) },
-            { 
-                $set: { 
-                    verificationToken: newToken,
-                    verificationExpiry: newExpiry,
+            { _id: user._id },
+            {
+                $set: {
+                    verificationToken,
+                    verificationExpiry,
                     updatedAt: new Date()
-                } 
+                }
             }
         );
 
-        await sendVerificationEmail(email, newToken);
+        await sendVerificationEmail(user.email, verificationToken);
 
-        res.json({
+        return res.status(200).json({
             success: true,
-            message: 'Verification email sent successfully'
+            message: "Verification email sent successfully."
         });
 
     } catch (error) {
-        console.error('Resend verification error:', error);
-        res.status(500).json({
+        console.error("Resend verification error:", error);
+
+        return res.status(500).json({
             success: false,
-            message: 'Server error'
+            message: "Server error"
         });
     }
 };
