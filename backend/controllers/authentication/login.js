@@ -4,17 +4,19 @@ const jwt = require('jsonwebtoken');
 // Login User
 exports.login = async (req, res) => {
     try {
-        const { username, password } = req.body;
+        const { identifier, password } = req.body;
         const db = req.db;
 
-        if (!username || !password) {
+        if (!identifier || !password) {
             return res.status(400).json({
                 success: false,
-                message: 'Username and password are required'
+                message: 'Username/email and password are required'
             });
         }
 
-        const user = await db.collection('users').findOne({ username });
+        const user = await db.collection('users').findOne({
+            $or: [{ username: identifier }, { email: identifier }]
+        });
 
         if (!user) {
             return res.status(401).json({

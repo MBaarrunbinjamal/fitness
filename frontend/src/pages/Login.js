@@ -1,33 +1,48 @@
 import { useState } from "react";
 import "./Login.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
- 
 export default function LoginForm() {
-  const [email, setEmail] = useState("");
+  var navigate = useNavigate();
+  const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [remember, setRemember] = useState(false);
   const [error, setError] = useState("");
   const [submitted, setSubmitted] = useState(false);
- 
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!email || !password) {
-      setError("Please fill in both fields.");
-      setSubmitted(false);
-      return;
-    }
     setError("");
-    setSubmitted(true);
-    // Hook up your real auth call here.
-    console.log("Login attempt:", { email, password, remember });
+
+    const obj = { identifier, password };
+
+    fetch('http://localhost:5000/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(obj)
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          localStorage.setItem(
+            "auth",
+            JSON.stringify({ token: data.token, user: data.user })
+          );
+          setSubmitted(true);
+          navigate("/dashboard");
+        } else {
+          setError(data.message);
+        }
+      })
+      .catch(err => {
+        console.log('something went wrong', err);
+        setError('Something went wrong. Please try again.');
+      });
   };
- 
+
   return (
     <>
-     
-       {/* go back to home button */}
       <Link to="/" className="forge-back-home">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M3 12l9-9 9 9" />
@@ -41,22 +56,22 @@ export default function LoginForm() {
           <p className="forge-login-eyebrow">Welcome Back</p>
           <h1 className="forge-login-title">Sign In</h1>
           <p className="forge-login-sub">Log in to keep tracking your progress.</p>
- 
+
           <form onSubmit={handleSubmit} noValidate>
             <div className="forge-field">
-              <label className="forge-label" htmlFor="loginEmail">Email</label>
+              <label className="forge-label" htmlFor="loginIdentifier">Username or Email</label>
               <div className="forge-input-group">
                 <input
-                  id="loginEmail"
-                  type="email"
+                  id="loginIdentifier"
+                  type="text"
                   className="forge-input"
-                  placeholder="you@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="you@example.com or username"
+                  value={identifier}
+                  onChange={(e) => setIdentifier(e.target.value)}
                 />
               </div>
             </div>
- 
+
             <div className="forge-field">
               <label className="forge-label" htmlFor="loginPassword">Password</label>
               <div className="forge-input-group">
@@ -78,7 +93,7 @@ export default function LoginForm() {
                 </button>
               </div>
             </div>
- 
+
             <div className="forge-login-row">
               <label className="forge-remember">
                 <input
@@ -90,17 +105,17 @@ export default function LoginForm() {
               </label>
               <button type="button" className="forge-forgot">Forgot password?</button>
             </div>
- 
+
             {error && <p className="forge-error">{error}</p>}
             {submitted && !error && (
               <p className="forge-success">Logged in successfully.</p>
             )}
- 
+
             <button type="submit" className="forge-submit">Sign In</button>
           </form>
- 
+
           <div className="forge-divider">or</div>
- 
+
           <p className="forge-signup-text">
             Don't have an account? <Link to="/register">Register Now</Link>
           </p>
@@ -108,4 +123,4 @@ export default function LoginForm() {
       </div>
     </>
   );
-}
+} 
