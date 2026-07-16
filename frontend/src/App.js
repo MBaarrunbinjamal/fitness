@@ -15,6 +15,7 @@ import useForgeEffects from "./hooks/useForgeEffects";
 import {Routes,Route} from "react-router-dom";
 
 import Dashboard from "./pages/Dashboard";
+import Adash from "./pages/Adash";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import VerifyEmail from './pages/VerifyEmail';
@@ -28,6 +29,7 @@ function App() {
   <Route path="/"element={<Home/>}/>
   <Route path="/verify-email"element={<VerifyEmail/>}/>
   <Route path="/dashboard"element={<Dashboard/>}/>
+  <Route path="/admin"element={<Adash/>}/>
   <Route path="/login"element={<Login/>}/>
   <Route path="/register"element={<Register/>}/>
 </Routes>
