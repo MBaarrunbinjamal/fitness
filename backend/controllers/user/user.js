@@ -1,10 +1,12 @@
 const path = require('path');
+
 const { ObjectId } = require('mongodb');
 const multer = require('multer');
 const fs = require('fs');
 const nodemailer = require('nodemailer');
 
 var auth = require('../../middleware/auth');
+const API_KEY = process.env.USDA_API_KEY;
 
 const diskStorage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -143,18 +145,74 @@ async function updateUser(req, res) {
 }
 
 async function createWorkout(req, res) {
-    try {
-        const workoutData = {
-            ...req.body,
-            userId: req.user._id,
-            createdAt: new Date()
-        };
-        const result = await req.db.collection('workouts').insertOne(workoutData);
-        res.json({ success: true, workout: result });
-    } catch (error) {
-        res.status(500).json({ success: false, message: error.message });
+  try {
+    const {
+      workoutName,
+      category,
+      tags,
+      description,
+      exercises,
+    } = req.body;
+
+    if (!workoutName || !category) {
+      return res.status(400).json({
+        success: false,
+        message: "Workout name and category are required.",
+      });
     }
-}
+
+    if (!Array.isArray(exercises) || exercises.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "At least one exercise is required.",
+      });
+    }
+
+    for (const exercise of exercises) {
+      if (
+        !exercise.exerciseName ||
+        exercise.sets == null ||
+        exercise.reps == null
+      ) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Each exercise must have exerciseName, sets, and reps.",
+        });
+      }
+    }
+var extinguisher = await db.collection('workouts').findOne({ workoutName, userId: req.user._id });
+    if (extinguisher) {
+      return res.status(400).json({
+        success: false,
+        message: "A workout with this name already exists.",
+      });
+    }
+
+    const workout = await db.collection('workouts').insertOne({
+      userId: req.user._id,
+      workoutName,
+      category,
+      tags: tags || [],
+      description: description || "",
+      exercises,
+    });
+
+    return res.status(201).json({
+      success: true,
+      message: "Workout created successfully.",
+      data: workout,
+    });
+
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error.",
+    });
+  }
+};
 
 async function getWorkouts(req, res) {
     try {

@@ -9,7 +9,12 @@ const verifyEmailController = require('../controllers/authentication/verifyEmail
 const forgotPasswordController = require('../controllers/authentication/forgotPassword');
 var adminController = require('../controllers/admin/admin');
 const userController = require('../controllers/user/user');
-
+const {
+    createNutritionLog,
+    getTodayNutrition,
+    getNutritionByDate,
+    deleteNutritionLog
+} = require("../controllers/user/nutritionController");
 // Register
 router.post('/auth/register', registerController.register);
 
@@ -54,7 +59,17 @@ router.post('/subscribe',  userController.subscribe);
 router.get('/my-workout-plan',  userController.getMyWorkoutPlan);
 router.get('/subscription-plans', userController.getsubscriptionPlans);
 router.get('/subscription-plans/:id', userController.getsinglesubscriptionPlan);
-//admin routes
+//nutrition routes
+router.post("/nutrition", auth, createNutritionLog);
+
+// Get today's nutrition
+router.get("/nutrition/today", auth, getTodayNutrition);
+
+// Get nutrition by date
+router.get("/nutrition/date/:date", auth, getNutritionByDate);
+
+// Delete nutrition log
+router.delete("/nutrition/:id", auth, deleteNutritionLog);//admin routes
 router.get('/admin/users',   adminController.getAllUsers);
 router.delete('/admin/users/:id',   adminController.deleteUser);
 router.get('/admin/requests',   adminController.getworkoutRequests);
@@ -62,4 +77,5 @@ router.post('/admin/requests/:id/accept',   adminController.acceptrequest);
 router.post('/admin/requests/:id/reject',   adminController.rejectrequest);
 router.post('/admin/subscriptions/:id/plan',   adminController.uploadWorkoutPlan);
 router.post('/admin/subscription-plans',   adminController.addsubscriptionPlan);
+
 module.exports = router;

@@ -3,7 +3,62 @@ const { MongoClient } = require('mongodb');
 const cors = require('cors');
 const cron = require('node-cron');
 require('dotenv').config();
+const { sendDailyNutritionEmail } = require("./controllers/user/nutritionController");
+cron.schedule("59 23 * * *", async () => {
 
+    console.log("Sending daily nutrition emails...");
+
+    try {
+
+        const users = await db.collection("users")
+            .find({})
+            .toArray();
+
+        for (const user of users) {
+
+            if (user.email) {
+                await sendDailyNutritionEmail(db, user);
+            }
+
+        }
+
+        console.log("Nutrition emails sent successfully.");
+
+    } catch (err) {
+
+        console.error("Error sending nutrition emails:", err);
+
+    }
+
+});
+// Every day at 11:59 PM
+cron.schedule("59 23 * * *", async () => {
+
+    console.log("Sending daily nutrition emails...");
+
+    try {
+
+        const users = await db.collection("users")
+            .find({})
+            .toArray();
+
+        for (const user of users) {
+
+            if (user.email) {
+                await sendDailyNutritionEmail(db, user);
+            }
+
+        }
+
+        console.log("Nutrition emails sent successfully.");
+
+    } catch (err) {
+
+        console.error("Error sending nutrition emails:", err);
+
+    }
+
+});
 const { expireOldSubscriptions } = require('./utils/subscriptions'); // adjust path to wherever you put it
 
 const app = express();
