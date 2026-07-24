@@ -3,67 +3,15 @@ const { MongoClient } = require('mongodb');
 const cors = require('cors');
 const cron = require('node-cron');
 require('dotenv').config();
-const { sendDailyNutritionEmail } = require("./controllers/user/nutritionController");
-cron.schedule("59 23 * * *", async () => {
 
-    console.log("Sending daily nutrition emails...");
-
-    try {
-
-        const users = await db.collection("users")
-            .find({})
-            .toArray();
-
-        for (const user of users) {
-
-            if (user.email) {
-                await sendDailyNutritionEmail(db, user);
-            }
-
-        }
-
-        console.log("Nutrition emails sent successfully.");
-
-    } catch (err) {
-
-        console.error("Error sending nutrition emails:", err);
-
-    }
-
-});
-// Every day at 11:59 PM
-cron.schedule("59 23 * * *", async () => {
-
-    console.log("Sending daily nutrition emails...");
-
-    try {
-
-        const users = await db.collection("users")
-            .find({})
-            .toArray();
-
-        for (const user of users) {
-
-            if (user.email) {
-                await sendDailyNutritionEmail(db, user);
-            }
-
-        }
-
-        console.log("Nutrition emails sent successfully.");
-
-    } catch (err) {
-
-        console.error("Error sending nutrition emails:", err);
-
-    }
-
-});
-const { expireOldSubscriptions } = require('./utils/subscriptions'); // adjust path to wherever you put it
+const { expireOldSubscriptions } = require('./utils/subscriptions');
+const { dispatchDueReminders } = require('./utils/reminders');
+const { sendAllDailyNutritionEmails } = require('./controllers/user/nutritionController');
 
 const app = express();
 app.use(express.json());
 app.use(cors());
+app.use('/uploads', express.static('uploads'));
 
 let db;
 const client = new MongoClient(process.env.MONGO_URL);
@@ -74,13 +22,31 @@ async function connectDB() {
         db = client.db(process.env.DB_NAME);
         console.log('MongoDB connected successfully');
 
-        // set up cron only after db is ready
         cron.schedule('0 0 * * *', async () => {
             console.log('Running subscription expiry check...');
             try {
                 await expireOldSubscriptions(db);
             } catch (err) {
                 console.error('Error running subscription expiry check:', err);
+            }
+        });
+
+        // Reminder dispatcher — checked every minute
+        cron.schedule('* * * * *', async () => {
+            try {
+                await dispatchDueReminders(db);
+            } catch (err) {
+                console.error('Error dispatching reminders:', err);
+            }
+        });
+
+        cron.schedule('59 23 * * *', async () => {
+            console.log('Sending daily nutrition emails...');
+            try {
+                await sendAllDailyNutritionEmails(db);
+                console.log('Nutrition emails sent successfully.');
+            } catch (err) {
+                console.error('Error sending nutrition emails:', err);
             }
         });
 

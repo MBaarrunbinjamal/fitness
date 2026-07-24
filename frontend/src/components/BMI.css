@@ -1,0 +1,9 @@
+.bmi-bar{
+    position: relative;
+}
+
+.bmi-bar-marker{
+    position: absolute;
+    transform: translateX(-50%);
+    transition: left .4s ease;
+}

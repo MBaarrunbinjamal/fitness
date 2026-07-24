@@ -1,10 +1,9 @@
-// controllers/admin/admin.js
-// controllers/admin/admin.js
-const nodemailer = require('nodemailer');
-const path = require('path');
-const { ObjectId } = require('mongodb');
-const multer = require('multer');
-const fs = require('fs');
+
+var nodemailer = require('nodemailer');
+var path = require('path');
+var { ObjectId } = require('mongodb');
+var multer = require('multer');
+var fs = require('fs');
 var auth = require('../../middleware/auth');
 
 async function getAllUsers(req, res) {
@@ -36,7 +35,7 @@ async function getworkoutRequests(req, res) {
 
 async function deleteUser(req, res) {
     try {
-        const userId = req.params.id;
+        var userId = req.params.id;
         await req.db.collection('users').deleteOne({ _id: new ObjectId(userId) });
         res.json({ success: true, message: 'User deleted successfully' });
     } catch (err) {
@@ -44,7 +43,49 @@ async function deleteUser(req, res) {
         res.status(500).json({ success: false, message: 'Server error' });
     }
 }
+function generateWorkoutPlan(user, durationDays) {
+    var goal = user.fitnessGoal;
+    var level = user.experienceLevel;
 
+    var templates = {
+        lose_weight: [
+            { exerciseName: 'Jumping Jacks', sets: 3, reps: 20 },
+            { exerciseName: 'Bodyweight Squats', sets: 3, reps: 15 },
+            { exerciseName: 'Mountain Climbers', sets: 3, reps: 20 },
+            { exerciseName: 'Running', sets: 1, reps: 1, notes: '20-30 minutes' }
+        ],
+        build_muscle: [
+            { exerciseName: 'Push Ups', sets: 4, reps: level === 'beginner' ? 8 : 15 },
+            { exerciseName: 'Squats', sets: 4, reps: level === 'beginner' ? 8 : 12 },
+            { exerciseName: 'Plank', sets: 3, reps: 1, notes: '30-60 seconds' },
+            { exerciseName: 'Lunges', sets: 3, reps: 12 }
+        ],
+        maintain: [
+            { exerciseName: 'Bodyweight Squats', sets: 3, reps: 12 },
+            { exerciseName: 'Push Ups', sets: 3, reps: 10 },
+            { exerciseName: 'Plank', sets: 2, reps: 1, notes: '30 seconds' }
+        ],
+        improve_endurance: [
+            { exerciseName: 'Running', sets: 1, reps: 1, notes: '30-40 minutes' },
+            { exerciseName: 'Jump Rope', sets: 3, reps: 50 },
+            { exerciseName: 'Burpees', sets: 3, reps: 10 }
+        ]
+    };
+
+    var baseExercises = templates[goal] || templates.maintain;
+    var plan = [];
+
+    for (var day = 1; day <= durationDays; day++) {
+        var isRestDay = day % 7 === 0;
+        plan.push({
+            day: day,
+            title: isRestDay ? 'Rest Day' : `Day ${day} — ${goal.replace('_', ' ')}`,
+            exercises: isRestDay ? [] : baseExercises.map(ex => ({ ...ex, completed: false }))
+        });
+    }
+
+    return plan;
+}
 async function acceptrequest(req, res) {
     try {
         var requestId = req.params.id;
@@ -54,7 +95,7 @@ async function acceptrequest(req, res) {
             return res.status(404).json({ success: false, message: 'Request not found' });
         }
 
-        if (request.status === 'accepted') {
+        if (request.status === 'accepted' || request.status === 'active') {
             return res.status(400).json({ success: false, message: 'Request already accepted' });
         }
 
@@ -62,10 +103,18 @@ async function acceptrequest(req, res) {
             return res.status(400).json({ success: false, message: 'Invalid request status' });
         }
 
+        var user = await req.db.collection('users').findOne({ _id: request.userId });
+
+        var workoutPlan = generateWorkoutPlan(user, request.subscriptionDuration);
+        var startDate = new Date();
+        var expiresAt = new Date(startDate);
+        expiresAt.setDate(expiresAt.getDate() + request.subscriptionDuration);
+
         await req.db.collection('UserSubscriptions').updateOne(
             { _id: new ObjectId(requestId) },
-            { $set: { status: 'accepted' } }
+            { $set: { status: 'active', workoutPlan, startDate, expiresAt } }
         );
+
         await req.db.collection('users').updateOne(
             { _id: request.userId },
             { $set: { subscriber: true } }
@@ -77,14 +126,13 @@ async function acceptrequest(req, res) {
             console.error('Failed to send accept notification email:', err);
         }
 
-        res.json({ success: true, message: 'Request accepted successfully. Awaiting workout plan upload.' });
+        res.json({ success: true, message: 'Request accepted and workout plan generated.' });
 
     } catch (err) {
         console.error('Error in acceptrequest:', err);
         res.status(500).json({ success: false, message: 'Server error' });
     }
 }
-
 async function rejectrequest(req, res) {
     try {
         var requestId = req.params.id;
@@ -139,7 +187,7 @@ async function addsubscriptionPlan(req, res) {
 async function sendacceptNotification(db, userIdtoSend) {
     var user = await db.collection('users').findOne({ _id: new ObjectId(userIdtoSend) });
     var useremail = user.email;
-    const transporter = nodemailer.createTransport({
+    var transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
             user: process.env.EMAIL_USER,
@@ -158,7 +206,7 @@ async function sendacceptNotification(db, userIdtoSend) {
 async function sendrejectNotification(db, userIdtoSend) {
     var user = await db.collection('users').findOne({ _id: new ObjectId(userIdtoSend) });
     var useremail = user.email;
-    const transporter = nodemailer.createTransport({
+    var transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
             user: process.env.EMAIL_USER,
@@ -174,44 +222,8 @@ async function sendrejectNotification(db, userIdtoSend) {
     });
 }
 
-async function uploadWorkoutPlan(req, res) {
-    try {
-        const subscriptionId = req.params.id;
-        const { workoutPlan } = req.body;
-
-        const subscription = await req.db.collection('UserSubscriptions').findOne({ _id: new ObjectId(subscriptionId) });
-
-        if (!subscription) {
-            return res.status(404).json({ success: false, message: 'Subscription not found' });
-        }
-        if (subscription.status !== 'accepted') {
-            return res.status(400).json({ success: false, message: 'Subscription must be accepted before a plan can be uploaded' });
-        }
-        if (!Array.isArray(workoutPlan) || workoutPlan.length !== subscription.subscriptionDuration) {
-            return res.status(400).json({
-                success: false,
-                message: `Workout plan must contain exactly ${subscription.subscriptionDuration} days`
-            });
-        }
-
-        const startDate = new Date();
-        const expiresAt = new Date(startDate);
-        expiresAt.setDate(expiresAt.getDate() + subscription.subscriptionDuration);
-
-        await req.db.collection('UserSubscriptions').updateOne(
-            { _id: new ObjectId(subscriptionId) },
-            { $set: { workoutPlan, status: 'active', startDate, expiresAt } }
-        );
-
-        res.json({ success: true, message: 'Workout plan uploaded, subscription is now active' });
-    } catch (err) {
-        console.error('Error in uploadWorkoutPlan:', err);
-        res.status(500).json({ success: false, message: 'Server error' });
-    }
-}
 
 module.exports = {
     getAllUsers, getworkoutRequests, deleteUser, acceptrequest, rejectrequest,
     addsubscriptionPlan, sendacceptNotification, sendrejectNotification,
-    uploadWorkoutPlan
 };

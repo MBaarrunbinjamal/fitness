@@ -1,0 +1,220 @@
+/* Matches the Forge dashboard theme: near-black background, orange accent,
+   rounded dark cards like TODAY'S WORKOUT / WEEKLY PROGRESS etc. */
+
+.forge-profile-page {
+  min-height: 100vh;
+  background: #0a0a0c;
+  padding: 100px 24px 60px;
+  max-width: 1100px;
+  margin: 0 auto;
+  color: #f5f5f5;
+}
+
+.forge-profile-loading {
+  text-align: center;
+  padding: 120px 0;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Floating back button */
+.forge-floating-back {
+  position: fixed;
+  top: 24px;
+  left: 24px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #121215;
+  border: 1px solid rgba(255, 106, 26, 0.4);
+  color: #ff6a1a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 100;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.forge-floating-back:hover {
+  background: rgba(255, 106, 26, 0.12);
+  transform: translateX(-2px);
+}
+
+.forge-floating-back svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Hero */
+.forge-profile-hero {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 36px;
+}
+
+.forge-profile-avatar-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.forge-profile-avatar {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid rgba(255, 106, 26, 0.5);
+}
+
+.forge-profile-avatar-edit {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #ff6a1a;
+  border: 2px solid #0a0a0c;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.forge-profile-avatar-edit svg {
+  width: 14px;
+  height: 14px;
+}
+
+.forge-profile-eyebrow {
+  color: #ff6a1a;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 0 0 4px;
+}
+
+.forge-profile-title {
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin: 0 0 6px;
+}
+
+.forge-profile-sub {
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.92rem;
+  margin: 0;
+}
+
+/* Grid of cards, same shape as the dashboard stat cards */
+.forge-profile-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.forge-profile-card {
+  background: #121215;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.forge-card-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0 0 18px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.forge-field {
+  margin-bottom: 16px;
+}
+
+.forge-field:last-child {
+  margin-bottom: 0;
+}
+
+.forge-field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.forge-label {
+  display: block;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.55);
+  margin-bottom: 6px;
+}
+
+.forge-input {
+  width: 100%;
+  background: #0a0a0c;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: #f5f5f5;
+  font-size: 0.92rem;
+}
+
+.forge-input:focus {
+  outline: none;
+  border-color: #ff6a1a;
+}
+
+.forge-profile-message {
+  grid-column: 1 / -1;
+  margin: 0;
+}
+
+.forge-error {
+  color: #e05a4e;
+  font-size: 0.88rem;
+}
+
+.forge-success {
+  color: #4caf6a;
+  font-size: 0.88rem;
+}
+
+.forge-profile-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.forge-profile-save {
+  padding: 12px 32px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #ff8a3d, #ff6a1a);
+  color: #fff;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+}
+
+.forge-profile-save:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (max-width: 900px) {
+  .forge-profile-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .forge-field-row {
+    grid-template-columns: 1fr;
+  }
+  .forge-profile-hero {
+    flex-direction: column;
+    text-align: center;
+  }
+}

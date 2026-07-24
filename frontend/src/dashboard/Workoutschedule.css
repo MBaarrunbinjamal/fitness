@@ -1,0 +1,120 @@
+.forge-schedule-page {
+  min-height: 100vh;
+  background: #0a0a0c;
+  color: #f5f5f5;
+  padding: 100px 24px 60px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.forge-schedule-status {
+  text-align: center;
+  padding: 80px 0;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.forge-schedule-header {
+  margin-bottom: 28px;
+}
+
+.forge-schedule-header h1 {
+  font-size: 1.7rem;
+  font-weight: 800;
+  margin: 0 0 6px;
+}
+
+.forge-schedule-header p {
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.forge-schedule-table-wrap {
+  background: #121215;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  overflow-x: auto;
+}
+
+.forge-schedule-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 640px;
+}
+
+.forge-schedule-table th {
+  text-align: left;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.45);
+  padding: 16px 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.forge-schedule-table td {
+  padding: 16px 18px;
+  font-size: 0.9rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.forge-schedule-table tr:last-child td {
+  border-bottom: none;
+}
+
+.forge-schedule-name {
+  font-weight: 700;
+}
+
+.forge-schedule-category {
+  text-transform: capitalize;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.forge-status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.forge-status-today {
+  background: rgba(255, 106, 26, 0.15);
+  color: #ff8a3d;
+}
+
+.forge-status-completed {
+  background: rgba(76, 175, 106, 0.15);
+  color: #4caf6a;
+}
+
+.forge-status-upcoming {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.forge-status-missed {
+  background: rgba(224, 90, 78, 0.12);
+  color: #e05a4e;
+}
+
+.forge-schedule-start {
+  padding: 8px 18px;
+  font-size: 0.82rem;
+}
+
+.forge-schedule-muted {
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 0.85rem;
+}
+
+.forge-row-today {
+  background: rgba(255, 106, 26, 0.04);
+}
+
+@media (max-width: 700px) {
+  .forge-schedule-page {
+    padding: 90px 16px 40px;
+  }
+}

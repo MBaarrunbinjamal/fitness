@@ -1,8 +1,44 @@
 import { useState } from "react";
 import "./Login.css";
 import { Link, useNavigate } from "react-router-dom";
-
+import { GoogleLogin } from "@react-oauth/google";  
 export default function LoginForm() {
+  const handleGoogleSuccess = async (credentialResponse) => {
+  try {
+    const res = await fetch("http://localhost:5000/api/auth/google", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        credential: credentialResponse.credential,
+      }),
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+      localStorage.setItem(
+        "auth",
+        JSON.stringify({
+          token: data.token,
+          user: data.user,
+        })
+      );
+
+      if (data.user.role === "Admin") {
+        navigate("/admin");
+      } else {
+        navigate("/dashboard");
+      }
+    } else {
+      setError(data.message);
+    }
+  } catch (err) {
+    console.log(err);
+    setError("Google login failed.");
+  }
+};
   var navigate = useNavigate();
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
@@ -30,7 +66,12 @@ export default function LoginForm() {
             JSON.stringify({ token: data.token, user: data.user })
           );
           setSubmitted(true);
-          navigate("/dashboard");
+          if (data.user.role === "Admin") {
+            navigate("/admin");
+          }
+          if(data.user.role === "user"){
+            navigate("/dashboard");
+          }
         } else {
           setError(data.message);
         }
@@ -103,7 +144,9 @@ export default function LoginForm() {
                 />
                 Remember me
               </label>
-              <button type="button" className="forge-forgot">Forgot password?</button>
+             <button type="button" className="forge-forgot" onClick={() => navigate("/forgot-password")}>
+  Forgot password?
+</button>
             </div>
 
             {error && <p className="forge-error">{error}</p>}
@@ -114,12 +157,28 @@ export default function LoginForm() {
             <button type="submit" className="forge-submit">Sign In</button>
           </form>
 
-          <div className="forge-divider">or</div>
+         <div className="forge-divider">or</div>
+
+<div style={{ marginBottom: "20px" }}>
+  <GoogleLogin
+    onSuccess={handleGoogleSuccess}
+    onError={() => {
+      setError("Google login failed.");
+    }}
+    theme="filled_black"
+    shape="pill"
+    width="100%"
+    text="continue_with"
+  />
+</div>
 
           <p className="forge-signup-text">
             Don't have an account? <Link to="/register">Register Now</Link>
           </p>
+          
+
         </div>
+
       </div>
     </>
   );

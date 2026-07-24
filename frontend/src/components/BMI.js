@@ -1,5 +1,5 @@
 import { useState } from "react";
-
+import "./BMI.css"
 function BMI() {
 
     const [height,setHeight]=useState("");
@@ -14,74 +14,59 @@ function BMI() {
 
     const [marker,setMarker]=useState(0);
 
-    const calculateBMI=()=>{
+   const calculateBMI = () => {
+    const h = parseFloat(height);
+    const w = parseFloat(weight);
 
-        const h=parseFloat(height);
-
-        const w=parseFloat(weight);
-
-        if(!h || !w){
-
-            setBMI("--");
-
-            setCategory("Please enter valid numbers");
-
-            setColor("");
-
-            return;
-
-        }
-
-        const value=(w/((h/100)*(h/100))).toFixed(1);
-
-        setBMI(value);
-
-        let percent=0;
-
-        if(value<18.5){
-
-            setCategory("Underweight");
-
-            setColor("#3b82f6");
-
-            percent=(value/18.5)*12.5;
-
-        }
-
-        else if(value<25){
-
-            setCategory("Healthy Weight");
-
-            setColor("limegreen");
-
-            percent=12.5+((value-18.5)/(25-18.5))*37.5;
-
-        }
-
-        else if(value<30){
-
-            setCategory("Overweight");
-
-            setColor("orange");
-
-            percent=50+((value-25)/5)*25;
-
-        }
-
-        else{
-
-            setCategory("Obese");
-
-            setColor("red");
-
-            percent=75+((value-30)/15)*25;
-
-        }
-
-        setMarker(Math.min(percent,98));
-
+    if (isNaN(h) || isNaN(w) || h <= 0 || w <= 0) {
+        setBMI("--");
+        setCategory("Please enter valid numbers");
+        setColor("");
+        setMarker(0);
+        return;
     }
 
+    const value = Number((w / ((h / 100) * (h / 100))).toFixed(1));
+
+    setBMI(value);
+
+    let percent = 0;
+
+    if (value < 18.5) {
+        setCategory("Underweight");
+        setColor("#3b82f6");
+
+        // 0% -> 25%
+        percent = (value / 18.5) * 25;
+    }
+
+    else if (value < 25) {
+        setCategory("Healthy Weight");
+        setColor("limegreen");
+
+        // 25% -> 50%
+        percent = 25 + ((value - 18.5) / (25 - 18.5)) * 25;
+    }
+
+    else if (value < 30) {
+        setCategory("Overweight");
+        setColor("orange");
+
+        // 50% -> 75%
+        percent = 50 + ((value - 25) / (30 - 25)) * 25;
+    }
+
+    else {
+        setCategory("Obese");
+        setColor("red");
+
+        // 75% -> 100% (cap at BMI 40)
+        const maxBMI = 40;
+        percent = 75 + ((Math.min(value, maxBMI) - 30) / (maxBMI - 30)) * 25;
+    }
+
+    setMarker(Math.min(Math.max(percent, 0), 100));
+};
     return(
 
 <section className="section bmi-section">

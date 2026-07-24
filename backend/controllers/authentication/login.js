@@ -39,14 +39,21 @@ exports.login = async (req, res) => {
             });
         }
 
-        const isMatch = await bcrypt.compare(password, user.password);
+      if (!user.password) {
+    return res.status(400).json({
+        success: false,
+        message: "This account uses Google Sign-In. Please continue with Google."
+    });
+}
 
-        if (!isMatch) {
-            return res.status(401).json({
-                success: false,
-                message: 'Invalid credentials'
-            });
-        }
+const isMatch = await bcrypt.compare(password, user.password);
+
+if (!isMatch) {
+    return res.status(401).json({
+        success: false,
+        message: "Invalid credentials"
+    });
+}
 
         const token = jwt.sign(
             { id: user._id, username: user.username },

@@ -1,21 +1,20 @@
-const axios = require("axios");
-const nodemailer = require("nodemailer");
-const { ObjectId } = require("mongodb");
+var axios = require("axios");
+var nodemailer = require("nodemailer");
+var { ObjectId } = require("mongodb");
 
-const API_KEY = process.env.USDA_API_KEY;
+var API_KEY = process.env.USDA_API_KEY;
 
-// ===============================
-// Search food from USDA
-// ===============================
-const searchFood = async (foodName) => {
 
-    const response = await axios.get(
+var searchFood = async (foodName) => {
+
+    var response = await axios.get(
         "https://api.nal.usda.gov/fdc/v1/foods/search",
         {
             params: {
                 api_key: API_KEY,
                 query: foodName,
-                pageSize: 1
+                pageSize: 5,
+                dataType: "Foundation,SR Legacy"
             }
         }
     );
@@ -27,9 +26,9 @@ const searchFood = async (foodName) => {
     return response.data.foods[0];
 };
 
-const getFoodDetails = async (fdcId) => {
+var getFoodDetails = async (fdcId) => {
 
-    const response = await axios.get(
+    var response = await axios.get(
         `https://api.nal.usda.gov/fdc/v1/food/${fdcId}`,
         {
             params: {
@@ -41,18 +40,21 @@ const getFoodDetails = async (fdcId) => {
     return response.data;
 };
 
-// ===============================
-// Get nutrient value
-// ===============================
-const getNutrient = (nutrients, nutrientId) => {
+var getNutrient = (nutrients, nutrientId, nameHint) => {
 
-    const nutrient = nutrients.find(item =>
-
+    let nutrient = nutrients.find(item =>
         item.nutrient?.id === nutrientId ||
         item.nutrientId === nutrientId ||
-        Number(item.nutrientNumber) === nutrientId
-
+        Number(item.nutrientNumber) === nutrientId ||
+        Number(item.nutrient?.number) === nutrientId
     );
+
+    if (!nutrient && nameHint) {
+        nutrient = nutrients.find(item => {
+            var name = item.nutrient?.name || item.nutrientName || "";
+            return name.toLowerCase().includes(nameHint.toLowerCase());
+        });
+    }
 
     if (!nutrient) return 0;
 
@@ -64,9 +66,6 @@ const getNutrient = (nutrients, nutrientId) => {
 
 };
 
-// ===============================
-// Create Nutrition Log
-// ===============================
 async function createNutritionLog(req, res) {
     try {
 
@@ -75,30 +74,26 @@ async function createNutritionLog(req, res) {
         const {
             foodName,
             mealType,
-            grams
+            grams,
+            date
         } = req.body;
 
         const userId = req.user.id || req.user._id;
 
         if (
-    !foodName ||
-    !mealType ||
-    !grams ||
-    isNaN(grams) ||
-    Number(grams) <= 0
-) {
-    return res.status(400).json({
-        success: false,
-        message: "Please enter a valid food name, meal type, and grams."
-    });
-}
+            !foodName ||
+            !mealType ||
+            !grams ||
+            isNaN(grams) ||
+            Number(grams) <= 0
+        ) {
+            return res.status(400).json({
+                success: false,
+                message: "Please enter a valid food name, meal type, and grams."
+            });
+        }
 
-        const validMeals = [
-            "Breakfast",
-            "Lunch",
-            "Dinner",
-            "Snack"
-        ];
+        const validMeals = ["Breakfast", "Lunch", "Dinner", "Snack"];
 
         if (!validMeals.includes(mealType)) {
             return res.status(400).json({
@@ -107,7 +102,6 @@ async function createNutritionLog(req, res) {
             });
         }
 
-        // Search USDA
         const food = await searchFood(foodName);
         if (!food) {
             return res.status(404).json({
@@ -116,89 +110,68 @@ async function createNutritionLog(req, res) {
             });
         }
 
-        const foodDetails = await getFoodDetails(food.fdcId);
+        const nutrients = food.foodNutrients || [];
 
-const nutrients = foodDetails.foodNutrients || [];
-
-      const caloriesPer100 = getNutrient(nutrients, 1008);
-const proteinPer100 = getNutrient(nutrients, 1003);
-const fatPer100 = getNutrient(nutrients, 1004);
-const carbsPer100 = getNutrient(nutrients, 1005);
+        const caloriesPer100 = getNutrient(nutrients, 1008, "energy");
+        const proteinPer100 = getNutrient(nutrients, 1003, "protein");
+        const fatPer100 = getNutrient(nutrients, 1004, "fat");
+        const carbsPer100 = getNutrient(nutrients, 1005, "carbohydrate");
 
         const multiplier = Number(grams) / 100;
 
         const nutrition = {
-
             userId: new ObjectId(userId),
-
             fdcId: food.fdcId,
-
             mealType,
-
             foodName: food.description,
-
             grams: Number(grams),
-
             calories: Number((caloriesPer100 * multiplier).toFixed(2)),
-
             protein: Number((proteinPer100 * multiplier).toFixed(2)),
-
             carbs: Number((carbsPer100 * multiplier).toFixed(2)),
-
             fat: Number((fatPer100 * multiplier).toFixed(2)),
-
-            createdAt: new Date()
-
+            createdAt: date ? new Date(date) : new Date()
         };
 
-        const result = await db
-            .collection("nutrition_logs")
-            .insertOne(nutrition);
+        if (
+            nutrition.calories > 0 &&
+            nutrition.protein === 0 &&
+            nutrition.fat === 0
+        ) {
+            return res.status(422).json({
+                success: false,
+                message: "Nutrition data for this food looks incomplete. Try a more specific food name (e.g. 'beef sirloin steak')."
+            });
+        }
+
+        const result = await db.collection("nutrition_logs").insertOne(nutrition);
 
         return res.status(201).json({
-
             success: true,
-
             message: "Nutrition log added successfully.",
-
-            data: {
-                _id: result.insertedId,
-                ...nutrition
-            }
-
+            data: { _id: result.insertedId, ...nutrition }
         });
 
     } catch (error) {
-
         console.error(error);
-
         return res.status(500).json({
-
             success: false,
-
             message: error.message
-
         });
-
     }
 }
-
-// ===============================
-// Get Today's Nutrition
-// ===============================
 async function getTodayNutrition(req, res) {
     try {
 
-        const db = req.db;
-        const userId = req.user.id || req.user._id;
+        var db = req.db;
+        var userId = req.user.id || req.user._id;
 
-        const start = new Date();
-        start.setHours(0,0,0,0);
+        var start = new Date();
+        start.setHours(0, 0, 0, 0);
 
-        const end = new Date();
-        end.setHours(23,59,59,999);
+        var end = new Date();
+        end.setHours(23, 59, 59, 999);
 
-        const logs = await db.collection("nutrition_logs")
+        var logs = await db.collection("nutrition_logs")
             .find({
                 userId: new ObjectId(userId),
                 createdAt: {
@@ -208,7 +181,7 @@ async function getTodayNutrition(req, res) {
             })
             .toArray();
 
-        const totals = logs.reduce((acc, item) => {
+        var totals = logs.reduce((acc, item) => {
 
             acc.calories += item.calories || 0;
             acc.protein += item.protein || 0;
@@ -239,23 +212,20 @@ async function getTodayNutrition(req, res) {
     }
 }
 
-// ===============================
-// Get Nutrition By Date
-// ===============================
 async function getNutritionByDate(req, res) {
     try {
 
-        const db = req.db;
-        const userId = req.user.id || req.user._id;
-        const { date } = req.params;
+        var db = req.db;
+        var userId = req.user.id || req.user._id;
+        var { date } = req.params;
 
-        const start = new Date(date);
-        start.setHours(0,0,0,0);
+        var start = new Date(date);
+        start.setHours(0, 0, 0, 0);
 
-        const end = new Date(date);
-        end.setHours(23,59,59,999);
+        var end = new Date(date);
+        end.setHours(23, 59, 59, 999);
 
-        const logs = await db.collection("nutrition_logs")
+        var logs = await db.collection("nutrition_logs")
             .find({
                 userId: new ObjectId(userId),
                 createdAt: {
@@ -279,20 +249,24 @@ async function getNutritionByDate(req, res) {
     }
 }
 
-// ===============================
-// Delete Nutrition Log
-// ===============================
 async function deleteNutritionLog(req, res) {
     try {
 
-        const db = req.db;
-        const userId = req.user.id || req.user._id;
-        const { id } = req.params;
+        var db = req.db;
+        var userId = req.user.id || req.user._id;
+        var { id } = req.params;
 
-        await db.collection("nutrition_logs").deleteOne({
+        var result = await db.collection("nutrition_logs").deleteOne({
             _id: new ObjectId(id),
             userId: new ObjectId(userId)
         });
+
+        if (result.deletedCount === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "Nutrition log not found."
+            });
+        }
 
         return res.json({
             success: true,
@@ -308,18 +282,15 @@ async function deleteNutritionLog(req, res) {
     }
 }
 
-// ===============================
-// Send Daily Nutrition Email
-// ===============================
 async function sendDailyNutritionEmail(db, user) {
 
-    const start = new Date();
-    start.setHours(0,0,0,0);
+    var start = new Date();
+    start.setHours(0, 0, 0, 0);
 
-    const end = new Date();
-    end.setHours(23,59,59,999);
+    var end = new Date();
+    end.setHours(23, 59, 59, 999);
 
-    const logs = await db.collection("nutrition_logs")
+    var logs = await db.collection("nutrition_logs")
         .find({
             userId: new ObjectId(user._id),
             createdAt: {
@@ -331,7 +302,7 @@ async function sendDailyNutritionEmail(db, user) {
 
     if (!logs.length) return;
 
-    const totals = logs.reduce((acc, item) => {
+    var totals = logs.reduce((acc, item) => {
 
         acc.calories += item.calories || 0;
         acc.protein += item.protein || 0;
@@ -363,7 +334,7 @@ async function sendDailyNutritionEmail(db, user) {
         `;
     });
 
-    const transporter = nodemailer.createTransport({
+    var transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
             user: process.env.EMAIL_USER,
@@ -371,7 +342,7 @@ async function sendDailyNutritionEmail(db, user) {
         }
     });
 
-    const html = `
+    var html = `
         <h2>Daily Nutrition Summary</h2>
 
         <table border="1" cellpadding="8" cellspacing="0">
@@ -406,13 +377,49 @@ async function sendDailyNutritionEmail(db, user) {
     });
 }
 
-// ===============================
-// Exports
-// ===============================
+async function sendAllDailyNutritionEmails(db) {
+
+    var users = await db.collection('users').find({ isVerified: true }).toArray();
+
+    for (var user of users) {
+        try {
+            await sendDailyNutritionEmail(db, user);
+            console.log(`[NUTRITION EMAIL SENT] to ${user.email}`);
+        } catch (err) {
+            console.error(`Failed to send nutrition email to ${user.email}:`, err);
+        }
+    }
+}
+async function getNutritionHistory(req, res) {
+    try {
+        var db = req.db;
+        var userId = req.user.id || req.user._id;
+
+        var days = await db.collection('nutrition_logs').aggregate([
+            { $match: { userId: new ObjectId(userId) } },
+            {
+                $group: {
+                    _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+                    calories: { $sum: "$calories" },
+                    protein: { $sum: "$protein" },
+                    carbs: { $sum: "$carbs" },
+                    fat: { $sum: "$fat" }
+                }
+            },
+            { $sort: { _id: -1 } }
+        ]).toArray();
+
+        res.json({ success: true, days });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+}
 module.exports = {
     createNutritionLog,
     getTodayNutrition,
     getNutritionByDate,
     deleteNutritionLog,
-    sendDailyNutritionEmail
+    sendDailyNutritionEmail,
+    sendAllDailyNutritionEmails,
+    getNutritionHistory
 };

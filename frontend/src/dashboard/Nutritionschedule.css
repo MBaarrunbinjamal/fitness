@@ -1,0 +1,195 @@
+.forge-schedule-page {
+  min-height: 100vh;
+  background: #0a0a0c;
+  color: #f5f5f5;
+  padding: 100px 24px 60px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.forge-schedule-status {
+  text-align: center;
+  padding: 80px 0;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.forge-schedule-header {
+  margin-bottom: 28px;
+}
+
+.forge-schedule-header h1 {
+  font-size: 1.7rem;
+  font-weight: 800;
+  margin: 0 0 6px;
+}
+
+.forge-schedule-header p {
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.forge-schedule-table-wrap {
+  background: #121215;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  overflow-x: auto;
+}
+
+.forge-schedule-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 640px;
+}
+
+.forge-schedule-table th {
+  text-align: left;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.45);
+  padding: 16px 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.forge-schedule-table td {
+  padding: 16px 18px;
+  font-size: 0.9rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.forge-schedule-table tr:last-child td {
+  border-bottom: none;
+}
+
+.forge-schedule-start {
+  padding: 8px 18px;
+  font-size: 0.82rem;
+}
+
+.forge-error {
+  color: #e05a4e;
+  font-size: 0.85rem;
+}
+
+/* Modal — same look as WorkoutModal/NutritionModal for consistency */
+.forge-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.forge-modal {
+  background: #121215;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  width: 100%;
+  max-width: 520px;
+  max-height: 82vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+}
+
+.forge-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.forge-modal-header h2 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 800;
+}
+
+.forge-modal-close {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  display: flex;
+}
+
+.forge-modal-close:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.forge-modal-close svg {
+  width: 20px;
+  height: 20px;
+}
+
+.forge-modal-body {
+  padding: 22px 24px;
+  overflow-y: auto;
+}
+
+/* Meal breakdown */
+.forge-meal-group {
+  margin-bottom: 22px;
+}
+
+.forge-meal-group:last-child {
+  margin-bottom: 0;
+}
+
+.forge-meal-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #ff6a1a;
+  margin: 0 0 10px;
+}
+
+.forge-meal-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.forge-meal-item {
+  background: #0a0a0c;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+
+.forge-meal-item-name {
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.forge-meal-item-name span {
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 0.85rem;
+}
+
+.forge-meal-item-macros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+@media (max-width: 700px) {
+  .forge-schedule-page {
+    padding: 90px 16px 40px;
+  }
+}

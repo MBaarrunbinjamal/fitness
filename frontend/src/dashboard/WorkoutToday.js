@@ -1,31 +1,81 @@
-function WorkoutToday(){
+import { useState, useEffect, useCallback } from "react";
+import WorkoutModal from "./Workoutmodal";
+import { useNavigate } from "react-router-dom";
 
-return(
+function WorkoutToday() {
+   var navigate = useNavigate()
+  var [modalOpen, setModalOpen] = useState(false);
+  var [workouts, setWorkouts] = useState([]);
+  var [loading, setLoading] = useState(true);
+  var [error, setError] = useState("");
 
-<div className="dashboard-card">
+  var token = (() => {
+    var stored = localStorage.getItem("auth");
+    return stored ? JSON.parse(stored).token : null;
+  })();
 
-<h3>
+  var fetchTodaysWorkouts = useCallback(() => {
+    setLoading(true);
+    fetch("http://localhost:5000/api/workouts/today", {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          setWorkouts(data.workouts);
+        } else {
+          setError(data.message || "Could not load workouts.");
+        }
+      })
+      .catch(() => setError("Could not load workouts."))
+      .finally(() => setLoading(false));
+  }, [token]);
 
-Today's Workout
+  useEffect(() => {
+    fetchTodaysWorkouts();
+  }, [fetchTodaysWorkouts]);
 
-</h3>
+  return (
+    <div className="dashboard-card">
+      <h3>Today's Workout</h3>
 
-<ul className="dashboard-list">
+      {loading && <p className="dashboard-muted">Loading...</p>}
+      {!loading && error && <p className="forge-error">{error}</p>}
 
-<li>Bench Press - 4 Sets</li>
+      {!loading && !error && workouts.length === 0 && (
+        <p className="dashboard-muted">No workouts logged for today yet.</p>
+      )}
 
-<li>Deadlift - 3 Sets</li>
+      {!loading && !error && workouts.length > 0 && (
+        <ul className="dashboard-list">
+          {workouts.map((w) => (
+            <li key={w._id}>
+              {w.workoutName} —{" "}
+              {w.exercises.map((ex) => ex.exerciseName).join(", ")}
+            </li>
+          ))}
+        </ul>
+      )}
 
-<li>Squats - 5 Sets</li>
+      <div className="mt-5  d-flex">
+        <button className="btn-forge-primary mx-2" onClick={() => setModalOpen(true)}>
+          Add New Workouts
+        </button>
+        <button className="btn-forge-primary  mx-2  " onClick={() => navigate("/workout-session")}>
+  Start Workout
+</button>
+      </div>
 
-<li>Running - 30 Minutes</li> 
+      <WorkoutModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        onCreated={(workout) => {
+          fetchTodaysWorkouts();
+        }}
+      />
 
-</ul>
-
-</div>
-
-);
-
+    </div>
+  );
 }
 
 export default WorkoutToday;

@@ -1,8 +1,44 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "./Register.css";
-
+import { GoogleLogin } from "@react-oauth/google";
 export default function RegisterForm() {
+  const handleGoogleSuccess = async (credentialResponse) => {
+  try {
+    const res = await fetch("http://localhost:5000/api/auth/google", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        credential: credentialResponse.credential,
+      }),
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+      localStorage.setItem(
+        "auth",
+        JSON.stringify({
+          token: data.token,
+          user: data.user,
+        })
+      );
+
+      if (data.user.role === "Admin") {
+        navigate("/admin");
+      } else {
+        navigate("/dashboard");
+      }
+    } else {
+      setError(data.message);
+    }
+  } catch (err) {
+    console.log(err);
+    setError("Google login failed.");
+  }
+};
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -147,8 +183,20 @@ navigate(`/verify-email?email=${encodeURIComponent(email)}`);
             <button type="submit" className="forge-submit">Create Account</button>
           </form>
 
-          <div className="forge-divider">or</div>
+<div className="forge-divider">or</div>
 
+<div style={{ marginBottom: "20px" }}>
+  <GoogleLogin
+    onSuccess={handleGoogleSuccess}
+    onError={() => {
+      setError("Google login failed.");
+    }}
+    theme="filled_black"
+    shape="pill"
+    width="100%"
+    text="continue_with"
+  />
+</div>
           <p className="forge-signin-text">
             Already have an account? <Link to="/login">Login In</Link>
           </p>

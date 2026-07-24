@@ -171,3 +171,67 @@ font-size:34px;
 }
 
 }
+/* Dropdown menu container — dark, matches Forge theme */
+.dashboard-navbar .dropdown-menu {
+  background: #121215;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 6px;
+  min-width: 170px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
+  margin-top: 10px;
+}
+
+/* Reset both <a> and <button> dropdown items to the same look,
+   so nothing from outer navbar `a` rules leaks in */
+.dashboard-navbar .dropdown-menu .dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 7px;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.85) !important;
+  font-size: 0.9rem;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.dashboard-navbar .dropdown-menu .dropdown-item:hover,
+.dashboard-navbar .dropdown-menu .dropdown-item:focus {
+  background: rgba(255, 106, 26, 0.12);
+  color: #ff6a1a !important;
+}
+
+/* Logout gets a subtle red tint to distinguish it as a destructive action */
+.dashboard-navbar .dropdown-menu .dropdown-item.logout-item {
+  color: #e05a4e !important;
+}
+
+.dashboard-navbar .dropdown-menu .dropdown-item.logout-item:hover {
+  background: rgba(224, 90, 78, 0.12);
+  color: #e05a4e !important;
+}
+
+/* Toggle button itself */
+.dashboard-navbar .pf-admin-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: none;
+  color: #f5f5f5;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 8px;
+}
+
+.dashboard-navbar .pf-admin-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.dashboard-navbar .pf-admin-btn::after {
+  border-top-color: rgba(255, 255, 255, 0.6);
+}

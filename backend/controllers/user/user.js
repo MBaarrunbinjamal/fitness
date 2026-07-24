@@ -1,16 +1,16 @@
-const path = require('path');
+var path = require('path');
 
-const { ObjectId } = require('mongodb');
-const multer = require('multer');
-const fs = require('fs');
-const nodemailer = require('nodemailer');
+var { ObjectId } = require('mongodb');
+var multer = require('multer');
+var fs = require('fs');
+var nodemailer = require('nodemailer');
 
 var auth = require('../../middleware/auth');
-const API_KEY = process.env.USDA_API_KEY;
+var API_KEY = process.env.USDA_API_KEY;
 
-const diskStorage = multer.diskStorage({
+var diskStorage = multer.diskStorage({
     destination: function (req, file, cb) {
-        const dir = 'uploads/profile-pics';
+        var dir = 'uploads/profile-pics';
         if (!fs.existsSync(dir)) {
             fs.mkdirSync(dir, { recursive: true });
         }
@@ -21,8 +21,8 @@ const diskStorage = multer.diskStorage({
     }
 });
 
-const fileFilter = (req, file, cb) => {
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+var fileFilter = (req, file, cb) => {
+    var allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
     if (allowedTypes.includes(file.mimetype)) {
         cb(null, true);
     } else {
@@ -30,7 +30,7 @@ const fileFilter = (req, file, cb) => {
     }
 };
 
-const upload = multer({
+var upload = multer({
     storage: diskStorage,
     limits: { fileSize: 5 * 1024 * 1024 },
     fileFilter
@@ -47,10 +47,10 @@ async function getUser(req, res) {
 
 async function updateUser(req, res) {
     try {
-        const db = req.db;
-        const userId = req.user._id;
+        var db = req.db;
+        var userId = req.user._id;
 
-        const {
+        var {
             username,
             fullName,
             height,
@@ -64,7 +64,7 @@ async function updateUser(req, res) {
             unitPreference
         } = req.body;
 
-        const updateFields = { updatedAt: new Date() };
+        var updateFields = { updatedAt: new Date() };
 
         if (username !== undefined) updateFields.username = username;
         if (fullName !== undefined) updateFields.fullName = fullName;
@@ -79,7 +79,7 @@ async function updateUser(req, res) {
         if (unitPreference !== undefined) updateFields.unitPreference = unitPreference;
 
         if (username) {
-            const existingUser = await db.collection('users').findOne({
+            var existingUser = await db.collection('users').findOne({
                 username,
                 _id: { $ne: new ObjectId(userId) }
             });
@@ -105,7 +105,7 @@ async function updateUser(req, res) {
             }
         }
 
-        const result = await db.collection('users').findOneAndUpdate(
+        var result = await db.collection('users').findOneAndUpdate(
             { _id: new ObjectId(userId) },
             { $set: updateFields },
             {
@@ -146,12 +146,14 @@ async function updateUser(req, res) {
 
 async function createWorkout(req, res) {
   try {
-    const {
+    var {
       workoutName,
       category,
+      date,
       tags,
       description,
       exercises,
+      reminderTime,
     } = req.body;
 
     if (!workoutName || !category) {
@@ -168,7 +170,7 @@ async function createWorkout(req, res) {
       });
     }
 
-    for (const exercise of exercises) {
+    for (var exercise of exercises) {
       if (
         !exercise.exerciseName ||
         exercise.sets == null ||
@@ -181,7 +183,8 @@ async function createWorkout(req, res) {
         });
       }
     }
-var extinguisher = await db.collection('workouts').findOne({ workoutName, userId: req.user._id });
+
+    var extinguisher = await req.db.collection('workouts').findOne({ workoutName, userId: req.user._id });
     if (extinguisher) {
       return res.status(400).json({
         success: false,
@@ -189,14 +192,33 @@ var extinguisher = await db.collection('workouts').findOne({ workoutName, userId
       });
     }
 
-    const workout = await db.collection('workouts').insertOne({
+    var workoutDate = date ? new Date(date) : new Date();
+    var cleanedExercises = exercises.map(ex => ({ ...ex, completed: false }));
+
+    var workout = await req.db.collection('workouts').insertOne({
       userId: req.user._id,
       workoutName,
       category,
+      date: workoutDate,
       tags: tags || [],
       description: description || "",
-      exercises,
+      exercises: cleanedExercises,
+      createdAt: new Date(),
     });
+
+    if (reminderTime) {
+      await req.db.collection('reminders').insertOne({
+        userId: req.user._id,
+        type: 'workout',
+        title: `Time for your workout: ${workoutName}`,
+        time: reminderTime,
+        date: workoutDate,
+        daysOfWeek: [],
+        active: true,
+        lastSentAt: null,
+        createdAt: new Date()
+      });
+    }
 
     return res.status(201).json({
       success: true,
@@ -212,20 +234,68 @@ var extinguisher = await db.collection('workouts').findOne({ workoutName, userId
       message: "Internal server error.",
     });
   }
-};
+}
+async function toggleExerciseComplete(req, res) {
+    try {
+        var { workoutId, exerciseIndex } = req.params;
+        var { completed } = req.body;
 
+        var workout = await req.db.collection('workouts').findOne({
+            _id: new ObjectId(workoutId),
+            userId: req.user._id
+        });
+
+        if (!workout) {
+            return res.status(404).json({ success: false, message: 'Workout not found' });
+        }
+
+        var idx = parseInt(exerciseIndex, 10);
+        if (!workout.exercises[idx]) {
+            return res.status(400).json({ success: false, message: 'Invalid exercise index' });
+        }
+
+        var updateKey = `exercises.${idx}.completed`;
+
+        await req.db.collection('workouts').updateOne(
+            { _id: new ObjectId(workoutId), userId: req.user._id },
+            { $set: { [updateKey]: completed } }
+        );
+
+        res.json({ success: true, message: 'Exercise updated' });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+}
 async function getWorkouts(req, res) {
     try {
-        const workouts = await req.db.collection('workouts').find({ userId: req.user._id }).toArray();
+        var workouts = await req.db.collection('workouts').find({ userId: req.user._id }).toArray();
         res.json({ success: true, workouts });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }
 }
+async function getTodaysWorkouts(req, res) {
+    try {
+        var startOfDay = new Date();
+        startOfDay.setHours(0, 0, 0, 0);
 
+        var endOfDay = new Date();
+        endOfDay.setHours(23, 59, 59, 999);
+
+        var workouts = await req.db.collection('workouts').find({
+            userId: req.user._id,
+            date: { $gte: startOfDay, $lte: endOfDay }
+        }).toArray();
+
+        res.json({ success: true, workouts });
+    } catch (error) {
+        console.error('Error in getTodaysWorkouts:', error);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+}
 async function getSingleWorkout(req, res) {
     try {
-        const workout = await req.db.collection('workouts').findOne({
+        var workout = await req.db.collection('workouts').findOne({
             _id: new ObjectId(req.params.id),
             userId: req.user._id
         });
@@ -240,7 +310,7 @@ async function getSingleWorkout(req, res) {
 
 async function updateWorkout(req, res) {
     try {
-        const result = await req.db.collection('workouts').updateOne(
+        var result = await req.db.collection('workouts').updateOne(
             { _id: new ObjectId(req.params.id), userId: req.user._id },
             { $set: req.body }
         );
@@ -255,7 +325,7 @@ async function updateWorkout(req, res) {
 
 async function deleteWorkout(req, res) {
     try {
-        const result = await req.db.collection('workouts').deleteOne({
+        var result = await req.db.collection('workouts').deleteOne({
             _id: new ObjectId(req.params.id),
             userId: req.user._id
         });
@@ -269,7 +339,7 @@ async function deleteWorkout(req, res) {
 }
 
 async function sendAdminNotification(db, userId) {
-    const transporter = nodemailer.createTransport({
+    var transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
             user: process.env.EMAIL_USER,
@@ -287,7 +357,7 @@ async function sendAdminNotification(db, userId) {
 
 async function getsubscriptionPlans(req, res) {
     try {
-        const plans = await req.db.collection('Subscriptions').find().toArray();
+        var plans = await req.db.collection('Subscriptions').find().toArray();
         res.json({ success: true, plans });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
@@ -297,7 +367,7 @@ async function getsubscriptionPlans(req, res) {
 async function getsinglesubscriptionPlan(req, res) {
     try {
         var planId = req.params.id;
-        const plan = await req.db.collection('Subscriptions').findOne({ _id: new ObjectId(planId) });
+        var plan = await req.db.collection('Subscriptions').findOne({ _id: new ObjectId(planId) });
         if (!plan) {
             return res.status(404).json({ success: false, message: 'Subscription plan not found' });
         }
@@ -309,16 +379,36 @@ async function getsinglesubscriptionPlan(req, res) {
 
 async function subscribe(req, res) {
     try {
-        const userId = req.user._id;
-        const { address, planId, cardnumber } = req.body;
+        var userId = req.user._id;
+        var { address, planId, cardnumber } = req.body;
 
-        const subscription = await req.db.collection('Subscriptions').findOne({ _id: new ObjectId(planId) });
+        var requiredFields = ['height', 'weight', 'dateOfBirth', 'gender', 'fitnessGoal', 'activityLevel', 'experienceLevel'];
+        var missingFields = requiredFields.filter(field => !req.user[field]);
+
+        if (missingFields.length > 0) {
+            return res.status(400).json({
+                success: false,
+                message: `Please complete your profile before subscribing. Missing: ${missingFields.join(', ')}`
+            });
+        }
+var existingActive = await req.db.collection('UserSubscriptions').findOne({
+    userId: userId,
+    status: { $in: ['pending', 'active'] }
+});
+
+if (existingActive) {
+    return res.status(400).json({
+        success: false,
+        message: 'You already have a pending or active subscription.'
+    });
+}
+        var subscription = await req.db.collection('Subscriptions').findOne({ _id: new ObjectId(planId) });
 
         if (!subscription) {
             return res.status(404).json({ success: false, message: 'Plan not found' });
         }
 
-        const subscriptionData = {
+        var subscriptionData = {
             userId: userId,
             cardnumber: cardnumber,
             planId: subscription._id,
@@ -335,7 +425,7 @@ async function subscribe(req, res) {
             expiresAt: null
         };
 
-        const result = await req.db.collection('UserSubscriptions').insertOne(subscriptionData);
+        var result = await req.db.collection('UserSubscriptions').insertOne(subscriptionData);
 
         sendAdminNotification(req.db, userId).catch(err => {
             console.error('Failed to send admin notification email:', err);
@@ -351,7 +441,7 @@ async function subscribe(req, res) {
 
 async function getMyWorkoutPlan(req, res) {
     try {
-        const sub = await req.db.collection('UserSubscriptions').findOne({
+        var sub = await req.db.collection('UserSubscriptions').findOne({
             userId: req.user._id,
             status: 'active'
         });
@@ -360,8 +450,8 @@ async function getMyWorkoutPlan(req, res) {
             return res.status(404).json({ success: false, message: 'No active subscription found' });
         }
 
-        const daysElapsed = Math.floor((new Date() - sub.startDate) / (1000 * 60 * 60 * 24));
-        const todaysWorkout = sub.workoutPlan[daysElapsed] || null;
+        var daysElapsed = Math.floor((new Date() - sub.startDate) / (1000 * 60 * 60 * 24));
+        var todaysWorkout = sub.workoutPlan[daysElapsed] || null;
 
         res.json({ success: true, fullPlan: sub.workoutPlan, today: todaysWorkout, dayNumber: daysElapsed + 1 });
     } catch (err) {
@@ -369,10 +459,118 @@ async function getMyWorkoutPlan(req, res) {
         res.status(500).json({ success: false, message: 'Server error' });
     }
 }
+async function createReminder(req, res) {
+    try {
+        var { type, title, time, daysOfWeek } = req.body;
 
+        if (!type || !title || !time) {
+            return res.status(400).json({ success: false, message: 'type, title, and time are required' });
+        }
+        if (!['workout', 'meal', 'goal'].includes(type)) {
+            return res.status(400).json({ success: false, message: 'Invalid reminder type' });
+        }
+
+        var reminder = {
+            userId: req.user._id,
+            type,
+            title,
+            time, 
+            daysOfWeek: Array.isArray(daysOfWeek) ? daysOfWeek : [],
+            active: true,
+            lastSentAt: null,
+            createdAt: new Date()
+        };
+
+        var result = await req.db.collection('reminders').insertOne(reminder);
+        res.json({ success: true, reminder: result });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+}
+
+async function getReminders(req, res) {
+    try {
+        var reminders = await req.db.collection('reminders').find({ userId: req.user._id }).toArray();
+        res.json({ success: true, reminders });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+}
+
+async function updateReminder(req, res) {
+    try {
+        var { title, time, daysOfWeek, active } = req.body;
+        var updateFields = {};
+        if (title !== undefined) updateFields.title = title;
+        if (time !== undefined) updateFields.time = time;
+        if (daysOfWeek !== undefined) updateFields.daysOfWeek = daysOfWeek;
+        if (active !== undefined) updateFields.active = active;
+
+        var result = await req.db.collection('reminders').updateOne(
+            { _id: new ObjectId(req.params.id), userId: req.user._id },
+            { $set: updateFields }
+        );
+
+        if (result.matchedCount === 0) {
+            return res.status(404).json({ success: false, message: 'Reminder not found' });
+        }
+        res.json({ success: true, message: 'Reminder updated' });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+}
+
+async function deleteReminder(req, res) {
+    try {
+        var result = await req.db.collection('reminders').deleteOne({
+            _id: new ObjectId(req.params.id),
+            userId: req.user._id
+        });
+        if (result.deletedCount === 0) {
+            return res.status(404).json({ success: false, message: 'Reminder not found' });
+        }
+        res.json({ success: true, message: 'Reminder deleted' });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+}
+async function toggleSubscriptionExerciseComplete(req, res) {
+    try {
+        var { dayIndex, exerciseIndex } = req.params;
+        var { completed } = req.body;
+
+        var sub = await req.db.collection('UserSubscriptions').findOne({
+            userId: req.user._id,
+            status: 'active'
+        });
+
+        if (!sub) {
+            return res.status(404).json({ success: false, message: 'No active subscription found' });
+        }
+
+        var dIdx = parseInt(dayIndex, 10);
+        var eIdx = parseInt(exerciseIndex, 10);
+
+        if (!sub.workoutPlan[dIdx] || !sub.workoutPlan[dIdx].exercises[eIdx]) {
+            return res.status(400).json({ success: false, message: 'Invalid day or exercise index' });
+        }
+
+        var updateKey = `workoutPlan.${dIdx}.exercises.${eIdx}.completed`;
+
+        await req.db.collection('UserSubscriptions').updateOne(
+            { _id: sub._id },
+            { $set: { [updateKey]: completed } }
+        );
+
+        res.json({ success: true, message: 'Updated' });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+}
 module.exports = {
     getUser, updateUser, upload, createWorkout, getWorkouts,
     getSingleWorkout, updateWorkout, deleteWorkout,
     getsubscriptionPlans, getsinglesubscriptionPlan, subscribe,
-    getMyWorkoutPlan
+    getMyWorkoutPlan,getTodaysWorkouts,deleteReminder,updateReminder,getReminders,createReminder
+    ,toggleExerciseComplete ,toggleSubscriptionExerciseComplete
 };

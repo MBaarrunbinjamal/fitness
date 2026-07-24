@@ -1,0 +1,128 @@
+.forge-myplan-page {
+  min-height: 100vh;
+  background: #0a0a0c;
+  color: #f5f5f5;
+  padding: 100px 24px 60px;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.forge-myplan-status {
+  text-align: center;
+  padding: 80px 0;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.forge-myplan-header {
+  margin-bottom: 20px;
+}
+
+.forge-myplan-header h1 {
+  font-size: 1.6rem;
+  font-weight: 800;
+  margin: 0 0 4px;
+}
+
+.forge-myplan-header p {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.forge-myplan-tabs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  margin-bottom: 18px;
+}
+
+.forge-myplan-tab {
+  flex-shrink: 0;
+  background: #121215;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.6);
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.forge-myplan-tab.is-today {
+  border-color: rgba(255, 106, 26, 0.5);
+}
+
+.forge-myplan-tab.active {
+  background: #ff6a1a;
+  color: #fff;
+  border-color: #ff6a1a;
+}
+
+.forge-myplan-card {
+  background: #121215;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.forge-myplan-day-title {
+  font-size: 1.2rem;
+  font-weight: 800;
+  margin: 0 0 18px;
+}
+
+.forge-myplan-rest {
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.9rem;
+}
+
+.forge-myplan-exercise-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.forge-myplan-exercise {
+  background: #0a0a0c;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+
+.forge-myplan-exercise.done {
+  opacity: 0.55;
+}
+
+.forge-myplan-exercise label {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.forge-myplan-exercise input[type="checkbox"] {
+  margin-top: 3px;
+  width: 18px;
+  height: 18px;
+  accent-color: #ff6a1a;
+}
+
+.forge-myplan-exercise-name {
+  display: block;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.forge-myplan-exercise.done .forge-myplan-exercise-name {
+  text-decoration: line-through;
+}
+
+.forge-myplan-exercise-detail {
+  display: block;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.5);
+}

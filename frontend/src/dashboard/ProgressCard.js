@@ -19,7 +19,7 @@ Weekly Progress
 
 </div>
 
-<p>
+<p className="mt-3">
 
 Workout Completion
 

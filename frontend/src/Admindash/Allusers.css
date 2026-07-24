@@ -1,0 +1,182 @@
+.forge-users-page {
+  min-height: 100vh;
+  background: #0a0a0c;
+  color: #f5f5f5;
+  padding: 100px 24px 60px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.forge-users-status {
+  text-align: center;
+  padding: 80px 0;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.forge-users-header {
+  margin-bottom: 28px;
+}
+
+.forge-users-header h1 {
+  font-size: 1.7rem;
+  font-weight: 800;
+  margin: 0 0 6px;
+}
+
+.forge-users-header p {
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.forge-error {
+  color: #e05a4e;
+  font-size: 0.85rem;
+  margin-bottom: 16px;
+}
+
+.forge-users-table-wrap {
+  background: #121215;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  overflow-x: auto;
+}
+
+.forge-users-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 780px;
+}
+
+.forge-users-table th {
+  text-align: left;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.45);
+  padding: 16px 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.forge-users-table td {
+  padding: 14px 18px;
+  font-size: 0.88rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  vertical-align: middle;
+}
+
+.forge-users-table tr:last-child td {
+  border-bottom: none;
+}
+
+.forge-users-identity {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.forge-users-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.forge-users-name {
+  font-weight: 700;
+}
+
+.forge-users-username {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.forge-role-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.forge-role-admin {
+  background: rgba(255, 106, 26, 0.15);
+  color: #ff8a3d;
+}
+
+.forge-role-user {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.forge-status-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+
+.forge-status-dot.verified {
+  background: #4caf6a;
+}
+
+.forge-status-dot.pending {
+  background: #e0a94e;
+}
+
+.forge-users-delete {
+  background: none;
+  border: 1px solid rgba(224, 90, 78, 0.3);
+  color: #e05a4e;
+  padding: 7px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+}
+
+.forge-users-delete:hover {
+  background: rgba(224, 90, 78, 0.12);
+}
+
+.forge-users-delete svg {
+  width: 16px;
+  height: 16px;
+}
+
+.forge-confirm-row {
+  display: flex;
+  gap: 6px;
+}
+
+.forge-confirm-yes,
+.forge-confirm-no {
+  padding: 6px 12px;
+  border-radius: 7px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+}
+
+.forge-confirm-yes {
+  background: #e05a4e;
+  color: #fff;
+}
+
+.forge-confirm-yes:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.forge-confirm-no {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+@media (max-width: 700px) {
+  .forge-users-page {
+    padding: 90px 16px 40px;
+  }
+}

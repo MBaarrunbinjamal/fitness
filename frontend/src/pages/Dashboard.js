@@ -7,6 +7,7 @@ import MembershipCard from "../dashboard/MembershipCard";
 import ScheduleCard from "../dashboard/ScheduleCard";
 
 import "../dashboard/Dashboard.css";
+import BMI from "../components/BMI";
 
 function Dashboard() {
 
@@ -35,6 +36,7 @@ function Dashboard() {
                         <ScheduleCard />
 
                     </div>
+                        <BMI/>
 
                 </div>
 

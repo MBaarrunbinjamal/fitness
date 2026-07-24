@@ -1,19 +1,20 @@
-const express = require('express');
-const router = express.Router();
-const auth = require('../middleware/auth');
-
-// Require controllers
-const loginController = require('../controllers/authentication/login');
-const registerController = require('../controllers/authentication/register');
-const verifyEmailController = require('../controllers/authentication/verifyEmail');
-const forgotPasswordController = require('../controllers/authentication/forgotPassword');
+var express = require('express');
+var router = express.Router();
+var auth = require('../middleware/auth');
+const { googleLogin } = require("../controllers/authentication/googleLogin");
+var adminAuth = require('../middleware/Adminauth');
+var loginController = require('../controllers/authentication/login');
+var registerController = require('../controllers/authentication/register');
+var verifyEmailController = require('../controllers/authentication/verifyEmail');
+var forgotPasswordController = require('../controllers/authentication/forgotPassword');
 var adminController = require('../controllers/admin/admin');
-const userController = require('../controllers/user/user');
-const {
+var userController = require('../controllers/user/user');
+var {
     createNutritionLog,
     getTodayNutrition,
     getNutritionByDate,
-    deleteNutritionLog
+    deleteNutritionLog,
+    getNutritionHistory
 } = require("../controllers/user/nutritionController");
 // Register
 router.post('/auth/register', registerController.register);
@@ -35,15 +36,19 @@ router.post('/auth/forgot-password', forgotPasswordController.forgotPassword);
 
 // Reset Password
 router.post('/auth/reset-password', forgotPasswordController.resetPassword);
+router.post("/auth/google", googleLogin);
+router.post('/workouts', auth, userController.createWorkout);
+router.get('/workouts', auth, userController.getWorkouts);
+router.get('/workouts/today', auth, userController.getTodaysWorkouts); 
+router.get('/workouts/:id', auth, userController.getSingleWorkout);
+router.put('/workouts/:id', auth, userController.updateWorkout);
+router.delete('/workouts/:id', auth, userController.deleteWorkout);
+router.post('/reminders', auth, userController.createReminder);
+router.get('/reminders', auth, userController.getReminders);
+router.put('/reminders/:id', auth, userController.updateReminder);
+router.delete('/reminders/:id', auth, userController.deleteReminder);
+router.patch('/workouts/:workoutId/exercises/:exerciseIndex', auth, userController.toggleExerciseComplete);
 
-// Workout Routes
-router.post('/workouts', userController.createWorkout);
-router.get('/workouts', userController.getWorkouts);
-router.get('/workouts/:id', userController.getSingleWorkout);
-router.put('/workouts/:id', userController.updateWorkout);
-router.delete('/workouts/:id', userController.deleteWorkout);
-
-// Get Current User (Protected)
 router.get('/auth/me', auth, (req, res) => {
     res.json({
         success: true,
@@ -51,31 +56,30 @@ router.get('/auth/me', auth, (req, res) => {
     });
 });
 
-// User Routes
+
 router.get('/getuser', auth,userController.getUser);
 router.put('/update', auth, userController.upload.single('profilePicture'), userController.updateUser);
 
-router.post('/subscribe',  userController.subscribe);
-router.get('/my-workout-plan',  userController.getMyWorkoutPlan);
+router.post('/subscribe', auth, userController.subscribe);
+router.get('/my-workout-plan', auth, userController.getMyWorkoutPlan);
 router.get('/subscription-plans', userController.getsubscriptionPlans);
 router.get('/subscription-plans/:id', userController.getsinglesubscriptionPlan);
-//nutrition routes
+
 router.post("/nutrition", auth, createNutritionLog);
 
-// Get today's nutrition
+
 router.get("/nutrition/today", auth, getTodayNutrition);
 
-// Get nutrition by date
 router.get("/nutrition/date/:date", auth, getNutritionByDate);
+router.get("/nutrition/history", auth, getNutritionHistory);
 
-// Delete nutrition log
-router.delete("/nutrition/:id", auth, deleteNutritionLog);//admin routes
-router.get('/admin/users',   adminController.getAllUsers);
-router.delete('/admin/users/:id',   adminController.deleteUser);
-router.get('/admin/requests',   adminController.getworkoutRequests);
-router.post('/admin/requests/:id/accept',   adminController.acceptrequest);
-router.post('/admin/requests/:id/reject',   adminController.rejectrequest);
-router.post('/admin/subscriptions/:id/plan',   adminController.uploadWorkoutPlan);
-router.post('/admin/subscription-plans',   adminController.addsubscriptionPlan);
+router.delete("/nutrition/:id", auth, deleteNutritionLog);  
+router.get('/admin/users',  auth, adminController.getAllUsers);
+router.delete('/admin/users/:id',  auth, adminController.deleteUser);
+router.get('/admin/requests',  auth, adminController.getworkoutRequests);
+router.post('/admin/requests/:id/accept',  auth, adminController.acceptrequest);
+router.post('/admin/requests/:id/reject',  auth, adminController.rejectrequest);
+router.patch('/my-workout-plan/:dayIndex/exercises/:exerciseIndex', auth, userController.toggleSubscriptionExerciseComplete);
+router.post('/admin/subscription-plans',  auth, adminController.addsubscriptionPlan);
 
 module.exports = router;
