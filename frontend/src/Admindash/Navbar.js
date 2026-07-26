@@ -1,16 +1,9 @@
-import { useState, useEffect, useRef } from "react";
-import { Link, Links, useNavigate } from "react-router-dom";
-import Dropdown from "bootstrap/js/dist/dropdown";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 function Navbar() {
   const navigate = useNavigate();
-const dropdownRef = useRef(null);
 
-useEffect(() => {
-  if (dropdownRef.current) {
-    new Dropdown(dropdownRef.current);
-  }
-}, []);
   const auth = localStorage.getItem("auth");
   const user = auth ? JSON.parse(auth).user : null;
 
@@ -52,78 +45,59 @@ useEffect(() => {
         <div className="collapse navbar-collapse" id="navMain">
           <ul className="navbar-nav mx-auto pf-nav-links" id="navLinks">
             <li className="nav-item">
-              <a className="nav-link active" href="#top">
-                Dashboard
-              </a>
+     <Link to={'/admin'} className="nav-link active">Dashboard</Link>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="#members">
-                Members
-              </a>
+              <a className="nav-link" href="#members">Members</a>
+            </li>
+           
+            <li className="nav-item">
+              <a className="nav-link" href="#plans">Plans</a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="#trainers">
-                Trainers
-              </a>
+              <a className="nav-link" href="#attendance">Attendance</a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="#plans">
-                Plans
-              </a>
+              <a className="nav-link" href="#payments">Payments</a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="#attendance">
-                Attendance
-              </a>
+              <a className="nav-link" href="#reports">Reports</a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="#payments">
-                Payments
-              </a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="#reports">
-                Reports
-              </a>
+              <Link to="/Allusers" className="nav-link">Users</Link>
             </li>
              <li className="nav-item">
-            <Link to='/Allusers' className="nav-link"> Users </Link>
+              <Link to="/admin/plans" className="nav-link">Add plans</Link>
+            </li>
+ <li className="nav-item">
+              <Link to="/admin/requests" className="nav-link">Requests</Link>
             </li>
           </ul>
 
           <div className="d-flex align-items-center gap-2 pf-nav-actions">
-            <button
-              className="pf-icon-btn"
-              type="button"
-              aria-label="Search"
-            >
+            <button className="pf-icon-btn" type="button" aria-label="Search">
               <i className="bi bi-search"></i>
             </button>
 
-            <button
-              className="pf-icon-btn position-relative"
-              type="button"
-              aria-label="Notifications"
-            >
+            <button className="pf-icon-btn position-relative" type="button" aria-label="Notifications">
               <i className="bi bi-bell"></i>
               <span className="pf-badge-dot">3</span>
             </button>
 
             <div className="dropdown">
-          <button
-  ref={dropdownRef}
-  className="pf-admin-btn dropdown-toggle"
-  type="button"
-  data-bs-toggle="dropdown"
-  aria-expanded="false"
->
-  <span className="pf-avatar">
-    {user?.username?.charAt(0).toUpperCase() || "G"}
-  </span>
-  <span className="d-none d-xl-inline ms-2">
-    {user ? user.username : "Guest"}
-  </span>
-</button>
+              <button
+                className="pf-admin-btn dropdown-toggle"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <span className="pf-avatar">
+                  {user?.username?.charAt(0).toUpperCase() || "G"}
+                </span>
+                <span className="d-none d-xl-inline ms-2">
+                  {user ? user.username : "Guest"}
+                </span>
+              </button>
 
               <ul className="dropdown-menu dropdown-menu-end pf-dropdown">
                 <li>
@@ -131,30 +105,20 @@ useEffect(() => {
                     <i className="bi bi-person me-2"></i>My Profile
                   </Link>
                 </li>
-
                 <li>
                   <Link className="dropdown-item" to="/settings">
                     <i className="bi bi-gear me-2"></i>Settings
                   </Link>
                 </li>
-
                 <li>
                   <Link className="dropdown-item" to="/help">
                     <i className="bi bi-question-circle me-2"></i>Help Center
                   </Link>
                 </li>
-
+                <li><hr className="dropdown-divider" /></li>
                 <li>
-                  <hr className="dropdown-divider" />
-                </li>
-
-                <li>
-                  <button
-                    className="dropdown-item text-danger"
-                    onClick={logout}
-                  >
-                    <i className="bi bi-box-arrow-right me-2"></i>
-                    Sign Out
+                  <button className="dropdown-item text-danger" onClick={logout}>
+                    <i className="bi bi-box-arrow-right me-2"></i>Sign Out
                   </button>
                 </li>
               </ul>

@@ -1,0 +1,194 @@
+.forge-progress-page {
+  min-height: 100vh;
+  background: #0a0a0c;
+  color: #f5f5f5;
+  padding: 100px 24px 60px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.forge-progress-status {
+  text-align: center;
+  padding: 80px 0;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.forge-error {
+  color: #e05a4e;
+  font-size: 0.85rem;
+}
+
+.forge-progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.forge-progress-header h1 {
+  font-size: 1.7rem;
+  font-weight: 800;
+  margin: 0 0 6px;
+}
+
+.forge-progress-header p {
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.forge-progress-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.forge-secondary-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.85);
+  padding: 10px 20px;
+  border-radius: 999px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.88rem;
+}
+
+.forge-secondary-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.forge-secondary-btn:disabled,
+.btn-forge-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.forge-progress-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.forge-progress-summary-card {
+  background: #121215;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+  padding: 18px 20px;
+}
+
+.forge-summary-label {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin: 0 0 6px;
+}
+
+.forge-summary-value {
+  font-size: 1.6rem;
+  font-weight: 800;
+  margin: 0;
+  color: #ff8a3d;
+}
+
+.forge-progress-card {
+  background: #121215;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  padding: 22px;
+  margin-bottom: 20px;
+}
+
+.forge-progress-card h2 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0 0 14px;
+}
+
+.forge-chart-empty {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.85rem;
+  text-align: center;
+  padding: 60px 0;
+}
+
+.forge-plan-progress-card {
+  border-color: rgba(255, 106, 26, 0.25);
+}
+
+.forge-plan-progress-name {
+  color: #ff8a3d;
+  font-weight: 700;
+  margin: 0 0 12px;
+}
+
+.forge-plan-progress-bar {
+  height: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.forge-plan-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ff8a3d, #ff6a1a);
+  transition: width 0.3s ease;
+}
+
+.forge-plan-progress-text {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0;
+}
+
+.forge-charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.forge-charts-grid .forge-progress-card {
+  margin-bottom: 0;
+}
+
+.forge-progress-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.forge-progress-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #0a0a0c;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+
+.forge-progress-list-name {
+  font-weight: 700;
+}
+
+.forge-progress-list-meta {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.45);
+  text-transform: capitalize;
+}
+
+@media (max-width: 700px) {
+  .forge-progress-page {
+    padding: 90px 16px 40px;
+  }
+  .forge-charts-grid {
+    grid-template-columns: 1fr;
+  }
+}

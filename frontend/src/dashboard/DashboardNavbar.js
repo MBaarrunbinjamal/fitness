@@ -18,8 +18,39 @@ function DashboardNavbar() {
     });
     var user = auth ? auth.user : null;
 
-    var avatarSrc = user && user.profilePicture
-        ? `http://localhost:5000${user.profilePicture}`
+    var [freshUser, setFreshUser] = useState(null);
+    var [hasActivePlan, setHasActivePlan] = useState(false);
+
+    var token = auth ? auth.token : null;
+
+    useEffect(() => {
+        if (!token) return;
+
+        fetch("http://localhost:5000/api/getuser", {
+            headers: { Authorization: `Bearer ${token}` },
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                if (data.success) {
+                    setFreshUser(data.user);
+                }
+            })
+            .catch(() => {});
+
+        fetch("http://localhost:5000/api/my-workout-plan", {
+            headers: { Authorization: `Bearer ${token}` },
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                setHasActivePlan(!!data.success);
+            })
+            .catch(() => setHasActivePlan(false));
+    }, [token]);
+
+    var displayUser = freshUser || user;
+
+    var avatarSrc = displayUser && displayUser.profilePicture
+        ? `http://localhost:5000${displayUser.profilePicture}`
         : "https://i.pravatar.cc/100?img=12";
 
     function logout() {
@@ -36,11 +67,16 @@ function DashboardNavbar() {
                 </div>
 
                 <ul>
-                    <li><Link to="/">Home</Link></li>
-                    <li><a href="#progress">Progress</a></li>
-                    <li><a href="#membership">Membership</a></li>
+                    <li><Link to="/dashboard">Home</Link></li>
+                <li><Link to="/progress">MY-Progress</Link></li>
+                    <li><Link to='/plans'>Membership</Link></li>
                     <li><Link to="/schedule">Schedule</Link></li>
                     <li><Link to="/nschedule">Nutrition-Logs</Link></li>
+                
+
+                    {hasActivePlan && (
+                        <li><Link to='/my-plans'>My Plan</Link></li>
+                    )}
                 </ul>
 
                 <div className="dashboard-user">
@@ -55,7 +91,7 @@ function DashboardNavbar() {
                             aria-expanded="false"
                         >
                             <span className="d-none d-xl-inline ms-2">
-                                {user ? user.username : "Guest"}
+                                {displayUser ? displayUser.username : "Guest"}
                             </span>
                         </button>
 
@@ -65,11 +101,11 @@ function DashboardNavbar() {
                                     Profile
                                 </Link>
                             </li>
-                        <li>
-    <button className="dropdown-item logout-item" onClick={logout}>
-        Logout
-    </button>
-</li>
+                            <li>
+                                <button className="dropdown-item logout-item" onClick={logout}>
+                                    Logout
+                                </button>
+                            </li>
                         </ul>
                     </div>
                 </div>

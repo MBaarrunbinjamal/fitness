@@ -16,6 +16,8 @@ var {
     deleteNutritionLog,
     getNutritionHistory
 } = require("../controllers/user/nutritionController");
+const progressController = require('../controllers/user/progressController');
+
 // Register
 router.post('/auth/register', registerController.register);
 
@@ -80,6 +82,10 @@ router.get('/admin/requests',  auth, adminController.getworkoutRequests);
 router.post('/admin/requests/:id/accept',  auth, adminController.acceptrequest);
 router.post('/admin/requests/:id/reject',  auth, adminController.rejectrequest);
 router.patch('/my-workout-plan/:dayIndex/exercises/:exerciseIndex', auth, userController.toggleSubscriptionExerciseComplete);
-router.post('/admin/subscription-plans',  auth, adminController.addsubscriptionPlan);
-
+router.post('/admin/subscription-plans',  adminController.addsubscriptionPlan);
+router.get('/progress-report', auth, progressController.getProgressReport);
+router.get('/progress-report/pdf', auth, progressController.downloadProgressPDF);
+router.get('/progress-report/docx', auth, progressController.downloadProgressDocx);
+router.post('/progress-report/email', auth, progressController.emailProgressReport);
+router.get('/progress/weekly', auth, progressController .getWeeklyProgress);
 module.exports = router;

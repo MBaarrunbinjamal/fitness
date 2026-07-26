@@ -453,7 +453,13 @@ async function getMyWorkoutPlan(req, res) {
         var daysElapsed = Math.floor((new Date() - sub.startDate) / (1000 * 60 * 60 * 24));
         var todaysWorkout = sub.workoutPlan[daysElapsed] || null;
 
-        res.json({ success: true, fullPlan: sub.workoutPlan, today: todaysWorkout, dayNumber: daysElapsed + 1 });
+        res.json({
+            success: true,
+            fullPlan: sub.workoutPlan,
+            today: todaysWorkout,
+            dayNumber: daysElapsed + 1,
+            expiresAt: sub.expiresAt   // ← added
+        });
     } catch (err) {
         console.error('Error in getMyWorkoutPlan:', err);
         res.status(500).json({ success: false, message: 'Server error' });

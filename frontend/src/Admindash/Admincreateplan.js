@@ -1,5 +1,8 @@
 import { useState, useEffect } from "react";
 import "./Admincreateplan.css";
+import Navbar from "../Admindash/Navbar";
+
+const DURATION_OPTIONS = [30, 60, 90];
 
 export default function AdminCreatePlan() {
   const [plans, setPlans] = useState([]);
@@ -75,11 +78,13 @@ export default function AdminCreatePlan() {
   };
 
   return (
-    <div className="forge-createplan-page">
-      <div className="forge-createplan-header">
-        <h1>Subscription Plans</h1>
-        <p>Create and manage the plans users can subscribe to.</p>
-      </div>
+    <>
+      <Navbar />
+      <div className="forge-createplan-page">
+        <div className="forge-createplan-header">
+          <h1>Subscription Plans</h1>
+          <p>Create and manage the plans users can subscribe to.</p>
+        </div>
 
       <form onSubmit={handleSubmit} className="forge-createplan-form">
         <div className="forge-field-row">
@@ -115,14 +120,17 @@ export default function AdminCreatePlan() {
             />
           </div>
           <div className="forge-field">
-            <label className="forge-label">Duration (days)</label>
-            <input
-              type="number"
+            <label className="forge-label">Duration</label>
+            <select
               className="forge-input"
               value={duration}
               onChange={(e) => setDuration(e.target.value)}
-              placeholder="e.g. 30"
-            />
+            >
+              <option value="">Select duration</option>
+              {DURATION_OPTIONS.map((d) => (
+                <option key={d} value={d}>{d} days</option>
+              ))}
+            </select>
           </div>
         </div>
 
@@ -164,6 +172,7 @@ export default function AdminCreatePlan() {
           ))}
         </div>
       )}
-    </div>
+      </div>
+    </>
   );
 }

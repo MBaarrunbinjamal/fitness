@@ -32,6 +32,7 @@ import SubscribeForm from './components/Subscribeform';
 import AdminRequests from './Admindash/Adminrequests';
 import MyPlan from './components/Myplan';
 import AdminCreatePlan from './Admindash/Admincreateplan';
+import ProgressPage from './dashboard/ProgressPage';
 
 
 function App() {
@@ -39,26 +40,34 @@ function App() {
   return (
       <>
 <Routes>
-  <Route path="/"element={<Home/>}/>
-  <Route path="/verify-email"element={<VerifyEmail/>}/>
-  <Route path="/dashboard"element={<AuthGuard requiredRole="user"><Dashboard/></AuthGuard>}/>
-  <Route path="/admin"element={<AuthGuard requiredRole="Admin"><Adash/></AuthGuard>}/>
-  <Route path="/login"element={<Login/>}/>
+  {/* authentication routes start*/}
+    <Route path="/verify-email"element={<VerifyEmail/>}/>
+      <Route path="/login"element={<Login/>}/>
   <Route path="/register"element={<Register/>}/>
   <Route path="/forgot-password" element={<ForgotPassword/>} />
 <Route path="/reset-password" element={<ResetPassword/>} />
-  <Route path="/profile" element={<AuthGuard requiredRole="user"><Profile></Profile></AuthGuard>}/>
-<Route path = "/schedule" element={<AuthGuard requiredRole="user"><WorkoutSchedule/></AuthGuard>}/>
+{/* authentication routes end */}
+
+{/* user routes start */}
+  <Route path="/"element={<Home/>}/>
+  <Route path="/dashboard"element={<AuthGuard requiredRole="user"><Dashboard/></AuthGuard>}/>
+    <Route path="/profile" element={<AuthGuard requiredRole="user"><Profile></Profile></AuthGuard>}/>
+    <Route path = "/schedule" element={<AuthGuard requiredRole="user"><WorkoutSchedule/></AuthGuard>}/>
 <Route path="/workout-session" element={<AuthGuard requiredRole="user"><WorkoutSession/></AuthGuard>} />
 <Route path = "/nschedule" element={<AuthGuard requiredRole="user"><NutritionSchedule/></AuthGuard>}/>
-<Route path = "/allusers" element={<AuthGuard requiredRole="Admin"><AllUsers/></AuthGuard>}/>
 <Route path="/plans" element={<AuthGuard requiredRole="user"><SubscriptionPlans/></AuthGuard>} />
 <Route path="/subscribe/:planId" element={<AuthGuard requiredRole="user"><SubscribeForm/></AuthGuard>} />
 <Route path="/my-plan" element={<AuthGuard requiredRole="user"><MyPlan/></AuthGuard>} />
+<Route path="/progress" element={<AuthGuard requiredRole="user"><ProgressPage/></AuthGuard>} />
+
+{/* user routes end */}
+
+{/*admin routes start*/}
+  <Route path="/admin"element={<AuthGuard requiredRole="Admin"><Adash/></AuthGuard>}/>
+<Route path = "/allusers" element={<AuthGuard requiredRole="Admin"><AllUsers/></AuthGuard>}/>
 <Route path="/admin/requests" element={<AuthGuard requiredRole="Admin"><AdminRequests/></AuthGuard>} />
 <Route path="/admin/plans" element={<AuthGuard requiredRole="Admin"><AdminCreatePlan/></AuthGuard>} />
 </Routes>
-
       <Preloader />
       <ScrollProgress />
       <Cursor />

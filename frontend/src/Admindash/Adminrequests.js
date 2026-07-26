@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import "./Adminrequests.css";
-
+import Navbar from "../Admindash/Navbar";
 export default function AdminRequests() {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -63,7 +63,9 @@ export default function AdminRequests() {
   }
 
   return (
-    <div className="forge-requests-page">
+   <>
+    <Navbar />
+     <div className="forge-requests-page">
       <div className="forge-requests-header">
         <h1>Subscription Requests</h1>
         <p>{pending.length} awaiting review</p>
@@ -135,5 +137,6 @@ export default function AdminRequests() {
         </>
       )}
     </div>
+   </>
   );
 }

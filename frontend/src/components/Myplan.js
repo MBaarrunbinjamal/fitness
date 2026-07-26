@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import "./Myplan.css";
+import DashboardNavbar from "../dashboard/DashboardNavbar";
 
 export default function MyPlan() {
   const [planData, setPlanData] = useState(null);
@@ -84,6 +85,8 @@ export default function MyPlan() {
   const activeDay = planData.fullPlan[activeDayIndex];
 
   return (
+  <>
+  <DashboardNavbar/>
     <div className="forge-myplan-page">
       <div className="forge-myplan-header">
         <h1>Your Plan</h1>
@@ -133,5 +136,6 @@ export default function MyPlan() {
         </div>
       )}
     </div>
+  </>
   );
 }

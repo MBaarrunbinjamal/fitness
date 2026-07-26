@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Subscriptionplans.css";
+import DashboardNavbar from "../dashboard/DashboardNavbar";
 
 const REQUIRED_FIELDS = ["height", "weight", "dateOfBirth", "gender", "fitnessGoal", "activityLevel", "experienceLevel"];
 
@@ -49,6 +50,8 @@ export default function SubscriptionPlans() {
   }
 
   return (
+   <>
+   <DashboardNavbar/>
     <div className="forge-plans-page">
       <div className="forge-plans-header">
         <h1>Choose Your Plan</h1>
@@ -86,5 +89,6 @@ export default function SubscriptionPlans() {
         ))}
       </div>
     </div>
+   </>
   );
 }
