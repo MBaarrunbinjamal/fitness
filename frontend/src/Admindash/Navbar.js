@@ -305,41 +305,7 @@ function Navbar() {
               {userMenuOpen && (
                 <div className="pf-dropdown pf-dropdown-show">
 
-                  <Link
-                    className="pf-dropdown-item"
-                    to="/profile"
-                    onClick={() => {
-                      setUserMenuOpen(false);
-                      setNavOpen(false);
-                    }}
-                  >
-                    <i className="bi bi-person"></i>
-                    <span>My Profile</span>
-                  </Link>
-
-                  <Link
-                    className="pf-dropdown-item"
-                    to="/settings"
-                    onClick={() => {
-                      setUserMenuOpen(false);
-                      setNavOpen(false);
-                    }}
-                  >
-                    <i className="bi bi-gear"></i>
-                    <span>Settings</span>
-                  </Link>
-
-                  <Link
-                    className="pf-dropdown-item"
-                    to="/help"
-                    onClick={() => {
-                      setUserMenuOpen(false);
-                      setNavOpen(false);
-                    }}
-                  >
-                    <i className="bi bi-question-circle"></i>
-                    <span>Help Center</span>
-                  </Link>
+              
 
                   <div className="pf-dropdown-divider"></div>
 
