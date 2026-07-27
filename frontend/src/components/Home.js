@@ -2,7 +2,7 @@ import Navbar from "./Navbar";
 import Hero from "./Hero";
 import Why from "./Why";
 import Services from "./Services";
-import Pricing from "./Pricing";
+// import Pricing from "./Pricing";
 import BMI from "./BMI";
 import Gallery from "./Gallery";
 import Trainers from "./Trainers";
@@ -10,7 +10,7 @@ import Trainers from "./Trainers";
 import Stats from "./Stats";
 import Testimonials from "./Testimonials"; 
 import FAQ from "./FAQ";
-import Contact from "./Contact";
+// import Contact from "./Contact";
 
 function Home(){
 
@@ -21,7 +21,7 @@ return(
             <Hero />
             <Why />
             <Services /> 
-            <Pricing />
+            {/* <Pricing /> */}
             <BMI />
             <Gallery />
             <Trainers />
@@ -29,7 +29,7 @@ return(
             <Stats />
             <Testimonials />
             <FAQ />
-            <Contact />
+            {/* <Contact /> */}
             
 {/* <h1>Home</h1> */}
 

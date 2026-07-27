@@ -33,6 +33,8 @@ import AdminRequests from './Admindash/Adminrequests';
 import MyPlan from './components/Myplan';
 import AdminCreatePlan from './Admindash/Admincreateplan';
 import ProgressPage from './dashboard/ProgressPage';
+import Support from './dashboard/Support';
+import AdminSupport from './Admindash/Adminsupport';
 
 
 function App() {
@@ -59,6 +61,7 @@ function App() {
 <Route path="/subscribe/:planId" element={<AuthGuard requiredRole="user"><SubscribeForm/></AuthGuard>} />
 <Route path="/my-plan" element={<AuthGuard requiredRole="user"><MyPlan/></AuthGuard>} />
 <Route path="/progress" element={<AuthGuard requiredRole="user"><ProgressPage/></AuthGuard>} />
+<Route path="/support" element={<AuthGuard requiredRole="user"><Support/></AuthGuard>} />
 
 {/* user routes end */}
 
@@ -68,6 +71,8 @@ function App() {
 <Route path = "/allusers" element={<AuthGuard requiredRole="Admin"><AllUsers/></AuthGuard>}/>
 <Route path="/admin/requests" element={<AuthGuard requiredRole="Admin"><AdminRequests/></AuthGuard>} />
 <Route path="/admin/plans" element={<AuthGuard requiredRole="Admin"><AdminCreatePlan/></AuthGuard>} />
+<Route path="/admin/support" element={<AuthGuard requiredRole="Admin"><AdminSupport/></AuthGuard>} />
+
 </Routes>
       <Preloader />
       <ScrollProgress />

@@ -27,7 +27,7 @@ function Adash (){
        {/* <Attendance /> */}
        {/* <Payments /> */}
        <Previewcrd />
-       </main>
+       </main> 
      </>
    )
 }

@@ -68,21 +68,21 @@ function Navbar() {
                                 Programs
                             </a>
                         </li>
-                        <li className="nav-item">
+                        {/* <li className="nav-item">
                             <a className={`nav-link ${active === "pricing" ? "active" : ""}`} href="#pricing" onClick={closeMenu}>
                                 Pricing
                             </a>
-                        </li>
+                        </li> */}
                         <li className="nav-item">
                             <a className={`nav-link ${active === "gallery" ? "active" : ""}`} href="#gallery" onClick={closeMenu}>
                                 Gallery
                             </a>
                         </li>
-                        <li className="nav-item">
+                        {/* <li className="nav-item">
                             <a className={`nav-link ${active === "contact" ? "active" : ""}`} href="#contact" onClick={closeMenu}>
                                 Contact
                             </a>
-                        </li>
+                        </li> */}
                         <li className="nav-item">
                             <Link className={`nav-link ${active === "contact" ? "active" : ""}`} to="/dashboard" onClick={closeMenu}>
                                 Dashboard

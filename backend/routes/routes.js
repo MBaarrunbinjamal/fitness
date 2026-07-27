@@ -16,6 +16,8 @@ var {
     deleteNutritionLog,
     getNutritionHistory
 } = require("../controllers/user/nutritionController");
+var supportController = require('../controllers/user/supportController');
+
 const progressController = require('../controllers/user/progressController');
 
 // Register
@@ -88,4 +90,12 @@ router.get('/progress-report/pdf', auth, progressController.downloadProgressPDF)
 router.get('/progress-report/docx', auth, progressController.downloadProgressDocx);
 router.post('/progress-report/email', auth, progressController.emailProgressReport);
 router.get('/progress/weekly', auth, progressController .getWeeklyProgress);
+router.post('/contact',auth, supportController.submitContact); 
+router.post('/feedback', auth, supportController.submitFeedback);
+router.post('/complain', auth, supportController.submitComplaint);
+router.get('/my-complaints', auth, supportController.getMyComplaints);
+router.get('/admin/contacts', auth,  supportController.getAllContacts);
+router.get('/admin/feedback',   supportController.getAllFeedback);
+router.get('/admin/complaints', auth,  supportController.getAllComplaints);
+router.put('/admin/complaints/:id/status', auth, supportController.updateComplaintStatus);
 module.exports = router;

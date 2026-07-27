@@ -11,7 +11,7 @@ id="schedule"
 
 Upcoming Class
 
-</h3>
+</h3> 
 
 <h2>
 

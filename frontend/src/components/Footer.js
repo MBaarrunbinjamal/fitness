@@ -34,14 +34,14 @@ return(
           <li><a href="#">Press</a></li>
         </ul>
       </div>
-      <div class="col-lg-4">
+      {/* <div class="col-lg-4">
         <h4>Stay Updated</h4>
         <p>Subscribe for training tips and member-only offers.</p>
         <form class="newsletter-form" id="newsletterForm">
           <input type="email" placeholder="Your email address" required aria-label="Email address for newsletter"/>
           <button type="submit" aria-label="Subscribe"><i class="bi bi-arrow-right"></i></button>
         </form>
-      </div>
+      </div> */}
     </div>
 
     <div class="footer-bottom">

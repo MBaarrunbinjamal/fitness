@@ -275,7 +275,7 @@ function DashboardNavbar() {
                     <ul className="dashboard-nav-links">
 
                         <li>
-                            <Link to="/">
+                            <Link to="/dashboard">
                                 Home
                             </Link>
                         </li>
@@ -301,6 +301,18 @@ function DashboardNavbar() {
                         <li>
                             <Link to="/nschedule">
                                 Nutrition-Logs
+                            </Link>
+                        </li>
+                           <li>
+                            <Link to="/support">
+                                User-Support
+                            </Link>
+                        </li>
+
+
+                        <li>
+                            <Link to="/">
+                                Back to Web
                             </Link>
                         </li>
 
@@ -572,7 +584,7 @@ function DashboardNavbar() {
                     <li>
 
                         <Link
-                            to="/"
+                            to="/dashboard"
                             onClick={closeMenu}
                         >
 
@@ -633,6 +645,35 @@ function DashboardNavbar() {
                         >
 
                             Nutrition-Logs
+
+                        </Link>
+
+                    </li>
+ <li>
+                            <Link to="/support">
+                                User-Support
+                            </Link>
+                        </li>
+                        
+                        {hasActivePlan && (
+
+                            <li>
+
+                                <Link to="/my-plan">
+                                    My Plan
+                                </Link>
+
+                            </li>
+
+                        )}
+                     <li>
+
+                        <Link
+                            to="/"
+                            onClick={closeMenu}
+                        >
+
+                            Back To Web
 
                         </Link>
 

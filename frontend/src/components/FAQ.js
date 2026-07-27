@@ -8,7 +8,7 @@ function FAQ() {
         <p class="eyebrow reveal-up">Questions</p>
         <h2 class="section-title reveal-up">Frequently <span class="text-accent">asked.</span></h2>
         <p class="section-desc reveal-up">Can't find the answer you're looking for? Reach out to our team directly.</p>
-        <a href="#contact" class="btn btn-forge-ghost reveal-up">Contact Us</a>
+        {/* <a href="#contact" class="btn btn-forge-ghost reveal-up">Contact Us</a> */}
       </div>
       <div class="col-lg-8 reveal-up">
         <div class="accordion forge-accordion" id="faqAccordion">

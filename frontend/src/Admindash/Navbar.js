@@ -212,7 +212,15 @@ function Navbar() {
                 Users
               </Link>
             </li>
-
+<li className="nav-item">
+              <Link
+                to="/Admin/support"
+                className="nav-link"
+                onClick={handleNavLinkClick}
+              >
+               support
+              </Link>
+            </li>
             <li className="nav-item">
               <Link
                 to="/admin/plans"

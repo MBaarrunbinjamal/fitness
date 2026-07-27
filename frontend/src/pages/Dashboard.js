@@ -4,7 +4,7 @@ import WorkoutToday from "../dashboard/WorkoutToday";
 import ProgressCard from "../dashboard/ProgressCard";
 import CaloriesCard from "../dashboard/CaloriesCard";
 import MembershipCard from "../dashboard/MembershipCard";
-import ScheduleCard from "../dashboard/ScheduleCard";
+// import ScheduleCard from "../dashboard/ScheduleCard";
 
 import "../dashboard/Dashboard.css";
 import BMI from "../components/BMI";
@@ -33,7 +33,7 @@ function Dashboard() {
 
                         <MembershipCard />
 
-                        <ScheduleCard />
+                        {/* <ScheduleCard /> */}
 
                     </div>
                         <BMI/>
