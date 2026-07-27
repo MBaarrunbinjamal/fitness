@@ -12,12 +12,12 @@ function Hero () {
         <p className="pf-hero-sub">Complete gym management dashboard to manage members, trainers, subscriptions, attendance, payments and analytics in one place.</p>
 
         <div className="d-flex flex-wrap gap-3 mt-4">
-          <a href="#reports" className="btn pf-btn-primary btn-lg">
-            Open Dashboard <i className="bi bi-arrow-right ms-1"></i>
+          <a href="#" className="btn pf-btn-primary btn-lg">
+            Admin Dashboard <i className="bi bi-arrow-left ms-1"></i>
           </a>
-          <a href="#demo" className="btn pf-btn-outline btn-lg">
+          {/* <a href="#demo" className="btn pf-btn-outline btn-lg">
             <i className="bi bi-play-circle me-1"></i> View Demo
-          </a>
+          </a> */}
         </div>
 
         <div className="pf-hero-checks row row-cols-2 g-2 mt-4">
@@ -28,7 +28,7 @@ function Hero () {
         </div>
       </div>
 
-      <div className="col-lg-6 reveal-left">
+      {/* <div className="col-lg-6 reveal-left">
         <div className="pf-mock-card glass-card">
           <div className="pf-mock-head">
             <div>
@@ -81,7 +81,7 @@ function Hero () {
             <div className="pf-activity-row"><i className="bi bi-check2-circle text-accent"></i> Attendance marked — 41 members <span>1h</span></div>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   </div>
 </header>

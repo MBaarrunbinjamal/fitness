@@ -1,130 +1,358 @@
-import { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 function Navbar() {
   const navigate = useNavigate();
 
-  const auth = localStorage.getItem("auth");
-  const user = auth ? JSON.parse(auth).user : null;
+  const [token, setToken] = useState(() => {
+    return localStorage.getItem("auth");
+  });
 
-  const [token, setToken] = useState(auth);
+  const [user, setUser] = useState(null);
+  const [navOpen, setNavOpen] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
 
+  const navbarRef = useRef(null);
+  const userMenuRef = useRef(null);
+
+  // =========================================
+  // GET USER FROM LOCAL STORAGE
+  // =========================================
+  useEffect(() => {
+    const auth = localStorage.getItem("auth");
+
+    if (auth) {
+      try {
+        const parsedAuth = JSON.parse(auth);
+        setUser(parsedAuth?.user || null);
+      } catch (error) {
+        console.error("Invalid auth data:", error);
+        setUser(null);
+      }
+    } else {
+      setUser(null);
+    }
+  }, [token]);
+
+  // =========================================
+  // CLOSE NAVBAR / DROPDOWN WHEN CLICKING OUTSIDE
+  // =========================================
+  useEffect(() => {
+    function handleClickOutside(event) {
+      // Close mobile navbar if click is outside navbar
+      if (
+        navbarRef.current &&
+        !navbarRef.current.contains(event.target)
+      ) {
+        setNavOpen(false);
+      }
+
+      // Close user dropdown if click is outside user menu
+      if (
+        userMenuRef.current &&
+        !userMenuRef.current.contains(event.target)
+      ) {
+        setUserMenuOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  // =========================================
+  // CLOSE MOBILE NAVBAR ON ESCAPE
+  // =========================================
+  useEffect(() => {
+    function handleEscape(event) {
+      if (event.key === "Escape") {
+        setNavOpen(false);
+        setUserMenuOpen(false);
+      }
+    }
+
+    document.addEventListener("keydown", handleEscape);
+
+    return () => {
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, []);
+
+  // =========================================
+  // LOGOUT
+  // =========================================
   function logout() {
     localStorage.removeItem("auth");
+
     setToken(null);
+    setUser(null);
+    setNavOpen(false);
+    setUserMenuOpen(false);
+
     navigate("/login");
+  }
+
+  // =========================================
+  // NAV LINK CLICK
+  // =========================================
+  function handleNavLinkClick() {
+    setNavOpen(false);
+    setUserMenuOpen(false);
+  }
+
+  // =========================================
+  // TOGGLE MOBILE NAVBAR
+  // =========================================
+  function toggleNavbar() {
+    setNavOpen((prev) => !prev);
+
+    // Close user dropdown when opening/closing mobile navbar
+    setUserMenuOpen(false);
+  }
+
+  // =========================================
+  // TOGGLE USER DROPDOWN
+  // =========================================
+  function toggleUserMenu() {
+    setUserMenuOpen((prev) => !prev);
   }
 
   return (
     <nav
-      className="navbar navbar-expand-lg navbar-dark sticky-top pf-navbar"
+      className={`navbar navbar-dark sticky-top pf-navbar ${
+        navOpen ? "pf-navbar-open" : ""
+      }`}
       id="mainNav"
+      ref={navbarRef}
     >
       <div className="container-fluid px-3 px-lg-4">
-        <a className="navbar-brand pf-brand" href="#top">
+
+        {/* =========================================
+            LOGO
+        ========================================= */}
+        <Link
+          className="navbar-brand pf-brand"
+          to="/admin"
+          onClick={handleNavLinkClick}
+        >
           <span className="pf-logo-mark">
             <i className="bi bi-lightning-charge-fill"></i>
           </span>
-          PULSE<span className="text-accent">FORGE</span>
-        </a>
 
+          FITNESS
+          <span className="text-accent">TRACKER.</span>
+        </Link>
+
+        {/* =========================================
+            MOBILE HAMBURGER / CLOSE BUTTON
+        ========================================= */}
         <button
-          className="navbar-toggler"
+          className={`pf-mobile-toggle ${
+            navOpen ? "pf-mobile-toggle-active" : ""
+          }`}
           type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navMain"
-          aria-controls="navMain"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
+          onClick={toggleNavbar}
+          aria-label={navOpen ? "Close navigation" : "Open navigation"}
+          aria-expanded={navOpen}
         >
-          <span className="pf-toggler-icon">
-            <i className="bi bi-list"></i>
-          </span>
+          <i
+            className={`bi ${
+              navOpen ? "bi-x-lg" : "bi-list"
+            }`}
+          ></i>
         </button>
 
-        <div className="collapse navbar-collapse" id="navMain">
-          <ul className="navbar-nav mx-auto pf-nav-links" id="navLinks">
+        {/* =========================================
+            NAVIGATION
+        ========================================= */}
+        <div
+          className={`pf-navbar-menu ${
+            navOpen ? "pf-navbar-menu-open" : ""
+          }`}
+          id="navMain"
+        >
+
+          {/* =========================================
+              NAV LINKS
+          ========================================= */}
+          <ul
+            className="navbar-nav mx-auto pf-nav-links"
+            id="navLinks"
+          >
+
             <li className="nav-item">
-     <Link to={'/admin'} className="nav-link active">Dashboard</Link>
+              <Link
+                to="/admin"
+                className="nav-link "
+                onClick={handleNavLinkClick}
+              >
+                Dashboard
+              </Link>
             </li>
+
             <li className="nav-item">
-              <a className="nav-link" href="#members">Members</a>
+              <a
+                className="nav-link"
+                href="#reports"
+                onClick={handleNavLinkClick}
+              >
+                Reports
+              </a>
             </li>
-           
+
             <li className="nav-item">
-              <a className="nav-link" href="#plans">Plans</a>
+              <Link
+                to="/Allusers"
+                className="nav-link"
+                onClick={handleNavLinkClick}
+              >
+                Users
+              </Link>
             </li>
+
             <li className="nav-item">
-              <a className="nav-link" href="#attendance">Attendance</a>
+              <Link
+                to="/admin/plans"
+                className="nav-link"
+                onClick={handleNavLinkClick}
+              >
+                Add Plans
+              </Link>
             </li>
+
             <li className="nav-item">
-              <a className="nav-link" href="#payments">Payments</a>
+              <Link
+                to="/admin/requests"
+                className="nav-link"
+                onClick={handleNavLinkClick}
+              >
+                Requests
+              </Link>
             </li>
+
+
             <li className="nav-item">
-              <a className="nav-link" href="#reports">Reports</a>
+              <Link
+                to="/"
+                className="nav-link"
+                onClick={handleNavLinkClick}
+              >
+                Back To Website
+              </Link>
             </li>
-            <li className="nav-item">
-              <Link to="/Allusers" className="nav-link">Users</Link>
-            </li>
-             <li className="nav-item">
-              <Link to="/admin/plans" className="nav-link">Add plans</Link>
-            </li>
- <li className="nav-item">
-              <Link to="/admin/requests" className="nav-link">Requests</Link>
-            </li>
+
           </ul>
 
+          {/* =========================================
+              USER ACTIONS
+          ========================================= */}
           <div className="d-flex align-items-center gap-2 pf-nav-actions">
-            <button className="pf-icon-btn" type="button" aria-label="Search">
-              <i className="bi bi-search"></i>
-            </button>
 
-            <button className="pf-icon-btn position-relative" type="button" aria-label="Notifications">
-              <i className="bi bi-bell"></i>
-              <span className="pf-badge-dot">3</span>
-            </button>
+            {/* =========================================
+                USER DROPDOWN
+            ========================================= */}
+            <div
+              className="pf-user-dropdown"
+              ref={userMenuRef}
+            >
 
-            <div className="dropdown">
               <button
-                className="pf-admin-btn dropdown-toggle"
+                className={`pf-admin-btn ${
+                  userMenuOpen ? "pf-admin-btn-active" : ""
+                }`}
                 type="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
+                onClick={toggleUserMenu}
+                aria-expanded={userMenuOpen}
               >
+
+                {/* Avatar */}
                 <span className="pf-avatar">
-                  {user?.username?.charAt(0).toUpperCase() || "G"}
+                  {user?.username
+                    ? user.username.charAt(0).toUpperCase()
+                    : "G"}
                 </span>
-                <span className="d-none d-xl-inline ms-2">
+
+                {/* Username */}
+                <span className="pf-user-name">
                   {user ? user.username : "Guest"}
                 </span>
+
+                {/* Arrow */}
+                <i
+                  className={`bi ${
+                    userMenuOpen
+                      ? "bi-chevron-up"
+                      : "bi-chevron-down"
+                  } pf-dropdown-arrow`}
+                ></i>
+
               </button>
 
-              <ul className="dropdown-menu dropdown-menu-end pf-dropdown">
-                <li>
-                  <Link className="dropdown-item" to="/profile">
-                    <i className="bi bi-person me-2"></i>My Profile
+              {/* =========================================
+                  DROPDOWN MENU
+              ========================================= */}
+              {userMenuOpen && (
+                <div className="pf-dropdown pf-dropdown-show">
+
+                  <Link
+                    className="pf-dropdown-item"
+                    to="/profile"
+                    onClick={() => {
+                      setUserMenuOpen(false);
+                      setNavOpen(false);
+                    }}
+                  >
+                    <i className="bi bi-person"></i>
+                    <span>My Profile</span>
                   </Link>
-                </li>
-                <li>
-                  <Link className="dropdown-item" to="/settings">
-                    <i className="bi bi-gear me-2"></i>Settings
+
+                  <Link
+                    className="pf-dropdown-item"
+                    to="/settings"
+                    onClick={() => {
+                      setUserMenuOpen(false);
+                      setNavOpen(false);
+                    }}
+                  >
+                    <i className="bi bi-gear"></i>
+                    <span>Settings</span>
                   </Link>
-                </li>
-                <li>
-                  <Link className="dropdown-item" to="/help">
-                    <i className="bi bi-question-circle me-2"></i>Help Center
+
+                  <Link
+                    className="pf-dropdown-item"
+                    to="/help"
+                    onClick={() => {
+                      setUserMenuOpen(false);
+                      setNavOpen(false);
+                    }}
+                  >
+                    <i className="bi bi-question-circle"></i>
+                    <span>Help Center</span>
                   </Link>
-                </li>
-                <li><hr className="dropdown-divider" /></li>
-                <li>
-                  <button className="dropdown-item text-danger" onClick={logout}>
-                    <i className="bi bi-box-arrow-right me-2"></i>Sign Out
+
+                  <div className="pf-dropdown-divider"></div>
+
+                  <button
+                    className="pf-dropdown-item pf-logout-item"
+                    type="button"
+                    onClick={logout}
+                  >
+                    <i className="bi bi-box-arrow-right"></i>
+                    <span>Sign Out</span>
                   </button>
-                </li>
-              </ul>
+
+                </div>
+              )}
+
             </div>
+
           </div>
+
         </div>
+
       </div>
     </nav>
   );

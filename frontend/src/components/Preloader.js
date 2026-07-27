@@ -8,7 +8,7 @@ export default function Preloader(){
 
 <span className="preloader-mark">
 
-FORGE
+FITNESS TRACKER
 
 </span>
 

@@ -22,7 +22,7 @@ function ProgressCard() {
 
   return (
     <div className="dashboard-card" id="progress">
-      <h3>Weekly Progress</h3>
+      <h3>Weekly Progress</h3> 
 
       <div className="progress-circle">
         {percent === null ? "..." : `${percent}%`}

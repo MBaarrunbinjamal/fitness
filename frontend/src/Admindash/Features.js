@@ -24,13 +24,13 @@ function Features () {
           <p>Assign trainers, track sessions and monitor client progress in real time.</p>
         </div>
       </div>
-      <div className="col-md-6 col-lg-3 reveal-up" style={{ "--d": ".1s" }}>
+      {/* <div className="col-md-6 col-lg-3 reveal-up" style={{ "--d": ".1s" }}>
         <div className="pf-feature-card">
           <span className="pf-feature-icon"><i className="bi bi-calendar2-check-fill"></i></span>
           <h5>Attendance</h5>
           <p>Automated check-ins with biometric or QR support and live floor counts.</p>
         </div>
-      </div>
+      </div> */}
       <div className="col-md-6 col-lg-3 reveal-up" style={{ "--d": ".15s" }}>
         <div className="pf-feature-card">
           <span className="pf-feature-icon"><i className="bi bi-arrow-repeat"></i></span>
@@ -59,13 +59,13 @@ function Features () {
           <p>Actionable insights on growth, retention and revenue at a glance.</p>
         </div>
       </div>
-      <div className="col-md-6 col-lg-3 reveal-up" style={{ "--d": ".2s" }}>
+      {/* <div className="col-md-6 col-lg-3 reveal-up" style={{ "--d": ".2s" }}>
         <div className="pf-feature-card">
           <span className="pf-feature-icon"><i className="bi bi-gear-fill"></i></span>
           <h5>Settings</h5>
           <p>Configure roles, branches, permissions and billing preferences with ease.</p>
         </div>
-      </div>
+      </div> */}
     </div>
   </div>
 </section>

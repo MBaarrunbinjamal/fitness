@@ -39,7 +39,7 @@ function Navbar() {
         <nav className={`navbar navbar-expand-lg fixed-top custom-navbar ${scrolled ? "scrolled" : ""}`} id="mainNav">
             <div className="container">
                 <a className="navbar-brand" href="#hero">
-                    FORGE<span className="brand-dot">.</span>
+                    FITNESS TRACKER<span className="brand-dot">.</span>
                 </a>
 
                 <button className="navbar-toggler" onClick={() => setOpen(!open)}>
@@ -50,6 +50,9 @@ function Navbar() {
 
                 <div className={`collapse navbar-collapse ${open ? "show" : ""}`}>
                     <ul className="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+                      
+
+
                         <li className="nav-item">
                             <Link className={`nav-link ${active === "hero" ? "active" : ""}`} to="/#hero" onClick={closeMenu}>
                                 Home

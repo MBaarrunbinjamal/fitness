@@ -7,7 +7,7 @@ return(
   <div class="container">
     <div class="row g-5">
       <div class="col-lg-4">
-        <a class="footer-brand" href="#hero">FORGE<span class="brand-dot">.</span></a>
+        <a class="footer-brand" href="#hero">FITNESS TRACKER<span class="brand-dot">.</span></a>
         <p>Elite performance training for people who refuse average.</p>
         <div class="footer-socials">
           <a href="#" aria-label="Instagram"><i class="bi bi-instagram"></i></a>

@@ -6,9 +6,9 @@ import Pricing from "./Pricing";
 import BMI from "./BMI";
 import Gallery from "./Gallery";
 import Trainers from "./Trainers";
-import Schedule from "./Schedule";
+// import Schedule from "./Schedule";
 import Stats from "./Stats";
-import Testimonials from "./Testimonials";
+import Testimonials from "./Testimonials"; 
 import FAQ from "./FAQ";
 import Contact from "./Contact";
 
@@ -25,7 +25,7 @@ return(
             <BMI />
             <Gallery />
             <Trainers />
-            <Schedule />
+            {/* <Schedule /> */}
             <Stats />
             <Testimonials />
             <FAQ />

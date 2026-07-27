@@ -64,6 +64,7 @@ function App() {
 
 {/*admin routes start*/}
   <Route path="/admin"element={<AuthGuard requiredRole="Admin"><Adash/></AuthGuard>}/>
+  
 <Route path = "/allusers" element={<AuthGuard requiredRole="Admin"><AllUsers/></AuthGuard>}/>
 <Route path="/admin/requests" element={<AuthGuard requiredRole="Admin"><AdminRequests/></AuthGuard>} />
 <Route path="/admin/plans" element={<AuthGuard requiredRole="Admin"><AdminCreatePlan/></AuthGuard>} />

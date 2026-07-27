@@ -1,16 +1,32 @@
 import { useNavigate } from "react-router-dom";
 
 function WelcomeCard() {
-    var navigate = useNavigate();
+    const navigate = useNavigate();
 
-    var auth = localStorage.getItem("auth");
-    var user = auth ? JSON.parse(auth).user : null;
+    const auth = localStorage.getItem("auth");
+
+    let user = null;
+
+    try {
+        user = auth ? JSON.parse(auth)?.user : null;
+    } catch (error) {
+        console.error("Invalid auth data:", error);
+    }
+
+    const username = user?.username || "Member";
 
     return (
         <section className="welcome-card">
-            <div>
-                <span className="badge">
-                    Welcome Back {user?.username } 
+
+            {/* Decorative Glow */}
+            <div className="welcome-card-glow"></div>
+
+            {/* Content */}
+            <div className="welcome-card-content">
+
+                <span className="welcome-badge">
+                    <i className="bi bi-stars"></i>
+                    Welcome Back, {username}
                 </span>
 
                 <h1>
@@ -21,16 +37,27 @@ function WelcomeCard() {
                     Keep pushing yourself.
                     Every workout gets you closer to your goals.
                 </p>
+
             </div>
 
-            <button
-                className="btn-forge-primary"
-                onClick={() => navigate("/workout-session")}
-            >
-                Start Workout
-            </button>
+
+            {/* Action */}
+            <div className="welcome-card-action">
+
+                <button
+                    type="button"
+                    className="btn-forge-primary welcome-workout-btn"
+                    onClick={() => navigate("/workout-session")}
+                >
+                    <span>Start Workout</span>
+                    <i className="bi bi-arrow-right"></i>
+                </button>
+
+            </div>
+
         </section>
     );
 }
 
 export default WelcomeCard;
+

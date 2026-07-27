@@ -1,237 +1,1570 @@
-.dashboard{
-    background:#050505;
-    min-height:100vh;
-    padding:120px 0 60px;
+/* =========================================
+   DASHBOARD MAIN
+========================================= */
+
+.dashboard {
+    background: #050505;
+    min-height: 100vh;
+    padding: 120px 0 60px;
 }
 
-.dashboard-navbar{
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    background:rgba(10,10,10,.9);
-    backdrop-filter:blur(20px);
-    border-bottom:1px solid rgba(255,255,255,.08);
-    z-index:999;
+
+/* =========================================
+   DASHBOARD NAVBAR
+========================================= */
+
+.dashboard-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+
+    background: rgba(10, 10, 10, 0.9);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+    z-index: 9999;
 }
 
-.dashboard-nav-inner{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    height:80px;
+
+/* =========================================
+   NAVBAR INNER
+========================================= */
+
+.dashboard-nav-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    height: 80px;
+
+    position: relative;
 }
 
-.dashboard-logo{
-    color:#fff;
-    font-size:34px;
-    font-family:'Bebas Neue',sans-serif;
-    letter-spacing:2px;
+
+/* =========================================
+   LOGO
+========================================= */
+
+.dashboard-logo {
+    color: #fff;
+
+    font-size: 30px;
+
+    font-family: 'Bebas Neue', sans-serif;
+
+    letter-spacing: 1px;
+
+    /* flex-shrink: 0; */
 }
 
-.dashboard-logo span{
-    color:#ff4d00;
+.dashboard-logo span {
+    color: #ff4d00;
 }
 
-.dashboard-navbar ul{
-    display:flex;
-    gap:35px;
-    list-style:none;
-    margin:0;
-    padding:0;
+
+/* =========================================
+   DESKTOP NAVIGATION
+========================================= */
+
+.dashboard-nav-links {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 35px;
+
+    list-style: none;
+
+    margin: 0 auto;
+
+    padding: 0;
 }
 
-.dashboard-navbar a{
-    color:#fff;
-    text-decoration:none;
+.dashboard-nav-links li {
+    display: block;
+
+    list-style: none;
+
+    margin: 0;
+
+    padding: 0;
 }
 
-.dashboard-user{
-    display:flex;
-    align-items:center;
-    gap:12px;
+.dashboard-nav-links li a {
+    display: block;
+
+    color: #ffffff !important;
+
+    text-decoration: none;
+
+    white-space: nowrap;
+
+    font-size: 16px;
+
+    transition: color 0.3s ease;
 }
 
-.dashboard-user img{
-    width:45px;
-    height:45px;
-    border-radius:50%;
+.dashboard-nav-links li a:hover {
+    color: #ff6a1a !important;
 }
 
-.dashboard-user strong{
-    display:block;
-    color:#fff;
+
+/* =========================================
+   USER PROFILE
+========================================= */
+
+.dashboard-user {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    flex-shrink: 0;
+
+    position: relative;
 }
 
-.dashboard-user small{
-    color:#999;
+.dashboard-user img {
+    width: 45px;
+    height: 45px;
+
+    border-radius: 50%;
+
+    object-fit: cover;
+
+    border: 2px solid rgba(255, 106, 26, 0.5);
 }
 
-.welcome-card{
-    background:linear-gradient(135deg,#ff4d00,#ff7a00);
-    border-radius:20px;
-    padding:50px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:35px;
+
+/* =========================================
+   PROFILE DROPDOWN WRAPPER
+========================================= */
+
+.dashboard-profile-dropdown {
+    position: relative;
 }
 
-.welcome-card h1{
-    color:#fff;
-    font-size:48px;
-    margin:15px 0;
-}
 
-.welcome-card p{
-    color:#fff;
-    max-width:550px;
-}
+/* =========================================
+   PROFILE BUTTON
+========================================= */
 
-.badge{
-    background:#fff;
-    color:#ff4d00;
-    padding:8px 18px;
-    border-radius:40px;
-    font-weight:600;
-}
-
-.dashboard-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-    gap:25px;
-}
-
-.dashboard-card{
-    background:#111;
-    border:1px solid rgba(255,255,255,.08);
-    border-radius:20px;
-    padding:30px;
-}
-
-.dashboard-card h3{
-    margin-bottom:25px;
-    color:#fff;
-}
-
-.dashboard-card h2{
-    color:#ff7a00;
-}
-
-.dashboard-list{
-    padding-left:18px;
-}
-
-.dashboard-list li{
-    margin:14px 0;
-    color:#ddd;
-}
-
-.progress-circle{
-    width:150px;
-    height:150px;
-    border-radius:50%;
-    border:10px solid #ff4d00;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    font-size:35px;
-    margin:auto;
-    color:#fff;
-}
-
-.mini-bar{
-    height:12px;
-    background:#222;
-    border-radius:20px;
-    overflow:hidden;
-    margin-top:20px;
-}
-
-.mini-fill{
-    width:72%;
-    height:100%;
-    background:linear-gradient(90deg,#ff4d00,#ff7a00);
-}
-
-@media(max-width:768px){
-
-.dashboard-navbar ul{
-display:none;
-}
-
-.welcome-card{
-flex-direction:column;
-gap:30px;
-text-align:center;
-}
-
-.welcome-card h1{
-font-size:34px;
-}
-
-}
-/* Dropdown menu container — dark, matches Forge theme */
-.dashboard-navbar .dropdown-menu {
-  background: #121215;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 10px;
-  padding: 6px;
-  min-width: 170px;
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
-  margin-top: 10px;
-}
-
-/* Reset both <a> and <button> dropdown items to the same look,
-   so nothing from outer navbar `a` rules leaks in */
-.dashboard-navbar .dropdown-menu .dropdown-item {
-  display: block;
-  width: 100%;
-  padding: 10px 14px;
-  border-radius: 7px;
-  background: transparent;
-  border: none;
-  color: rgba(255, 255, 255, 0.85) !important;
-  font-size: 0.9rem;
-  text-align: left;
-  text-decoration: none;
-  cursor: pointer;
-  font-family: inherit;
-}
-
-.dashboard-navbar .dropdown-menu .dropdown-item:hover,
-.dashboard-navbar .dropdown-menu .dropdown-item:focus {
-  background: rgba(255, 106, 26, 0.12);
-  color: #ff6a1a !important;
-}
-
-/* Logout gets a subtle red tint to distinguish it as a destructive action */
-.dashboard-navbar .dropdown-menu .dropdown-item.logout-item {
-  color: #e05a4e !important;
-}
-
-.dashboard-navbar .dropdown-menu .dropdown-item.logout-item:hover {
-  background: rgba(224, 90, 78, 0.12);
-  color: #e05a4e !important;
-}
-
-/* Toggle button itself */
 .dashboard-navbar .pf-admin-btn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: transparent;
-  border: none;
-  color: #f5f5f5;
-  cursor: pointer;
-  padding: 6px 10px;
-  border-radius: 8px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 8px;
+
+    min-width: 90px;
+
+    background: transparent;
+
+    border: none;
+
+    color: #f5f5f5;
+
+    cursor: pointer;
+
+    padding: 8px 10px;
+
+    border-radius: 8px;
+
+    font-family: inherit;
+
+    font-size: 15px;
+
+    transition:
+        background 0.3s ease,
+        color 0.3s ease;
+
 }
 
-.dashboard-navbar .pf-admin-btn:hover {
-  background: rgba(255, 255, 255, 0.06);
+.dashboard-navbar .pf-admin-btn:hover,
+.dashboard-navbar .pf-admin-btn.profile-dropdown-active {
+
+    background:
+        rgba(255, 255, 255, 0.06);
+
+    color: #ff6a1a;
+
 }
 
-.dashboard-navbar .pf-admin-btn::after {
-  border-top-color: rgba(255, 255, 255, 0.6);
+
+/* =========================================
+   PROFILE USERNAME
+========================================= */
+
+.profile-username {
+
+    display: inline-block;
+
+    max-width: 120px;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+
 }
+
+
+/* =========================================
+   PROFILE ARROW
+========================================= */
+
+.profile-arrow {
+
+    font-size: 9px;
+
+    color: rgba(255, 255, 255, 0.6);
+
+    transition:
+        transform 0.3s ease,
+        color 0.3s ease;
+
+}
+
+.profile-dropdown-active .profile-arrow {
+
+    color: #ff6a1a;
+
+}
+
+.profile-arrow.arrow-up {
+
+    transform: rotate(180deg);
+
+}
+
+
+/* =========================================
+   PROFILE DROPDOWN MENU
+========================================= */
+
+.dashboard-profile-menu {
+
+    position: absolute;
+
+    top: calc(100% + 12px);
+
+    right: 0;
+
+    width: 180px;
+
+    background: #121215;
+
+    border: 1px solid
+        rgba(255, 255, 255, 0.1);
+
+    border-radius: 10px;
+
+    padding: 6px;
+
+    box-shadow:
+        0 15px 35px
+        rgba(0, 0, 0, 0.6);
+
+    z-index: 10010;
+
+    animation:
+        profileDropdownOpen
+        0.2s ease;
+}
+
+
+/* =========================================
+   DROPDOWN ANIMATION
+========================================= */
+
+@keyframes profileDropdownOpen {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(-8px);
+
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0);
+
+    }
+
+}
+
+
+/* =========================================
+   PROFILE MENU ITEMS
+========================================= */
+
+.profile-menu-item {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    width: 100%;
+
+    padding: 11px 13px;
+
+    border-radius: 7px;
+
+    background: transparent;
+
+    border: none;
+
+    color:
+        rgba(255, 255, 255, 0.85) !important;
+
+    font-size: 14px;
+
+    text-align: left;
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+    font-family: inherit;
+
+    transition:
+        background 0.3s ease,
+        color 0.3s ease;
+
+}
+
+.profile-menu-item:hover {
+
+    background:
+        rgba(255, 106, 26, 0.12);
+
+    color: #ff6a1a !important;
+
+}
+
+
+/* =========================================
+   LOGOUT ITEM
+========================================= */
+
+.profile-menu-item.logout-item {
+
+    color: #e05a4e !important;
+
+}
+
+.profile-menu-item.logout-item:hover {
+
+    background:
+        rgba(224, 90, 78, 0.12);
+
+    color: #e05a4e !important;
+
+}
+
+
+/* =========================================
+   MOBILE HAMBURGER
+========================================= */
+
+.dashboard-menu-toggle {
+
+    display: none;
+
+    width: 45px;
+
+    height: 45px;
+
+    padding: 8px;
+
+    background: transparent !important;
+
+    border: none !important;
+
+    cursor: pointer;
+
+    position: relative;
+
+    z-index: 10002;
+
+}
+
+
+.dashboard-menu-toggle span {
+
+    display: block;
+
+    width: 28px;
+
+    height: 3px;
+
+    margin: 5px auto;
+
+    background-color:
+        #ffffff !important;
+
+    border-radius: 5px;
+
+    transition:
+        all 0.3s ease;
+
+}
+
+
+/* =========================================
+   MOBILE OVERLAY
+========================================= */
+
+.dashboard-menu-overlay {
+
+    display: none;
+
+}
+
+
+/* =========================================
+   MOBILE SIDE MENU
+========================================= */
+
+.dashboard-mobile-menu {
+
+    display: none;
+
+}
+
+
+/* =========================================
+   WELCOME CARD
+========================================= */
+
+/* .welcome-card {
+
+    background:
+        linear-gradient(
+            135deg,
+            #ff4d00,
+            #ff7a00
+        );
+
+    border-radius: 20px;
+
+    padding: 50px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 35px;
+
+}
+
+.welcome-card h1 {
+
+    color: #fff;
+
+    font-size: 48px;
+
+    margin: 15px 0;
+
+}
+
+.welcome-card p {
+
+    color: #fff;
+
+    max-width: 550px;
+
+} */
+
+
+/* =========================================
+   WELCOME CARD
+========================================= */
+
+.welcome-card {
+
+    position: relative;
+
+    width: 100%;
+
+    min-height: 280px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 40px;
+
+    padding: 45px 50px;
+
+    margin-bottom: 35px;
+
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ff4d00 0%,
+            #ff5b08 45%,
+            #ff7a00 100%
+        );
+
+    border-radius: 24px;
+
+    box-shadow:
+        0 20px 50px
+        rgba(255, 77, 0, 0.18);
+
+}
+
+
+/* =========================================
+   DECORATIVE GLOW
+========================================= */
+
+.welcome-card-glow {
+
+    position: absolute;
+
+    width: 300px;
+
+    height: 300px;
+
+    right: -80px;
+
+    top: -120px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(255, 255, 255, 0.12);
+
+    filter: blur(5px);
+
+    pointer-events: none;
+
+}
+
+
+/* =========================================
+   SECOND DECORATIVE GLOW
+========================================= */
+
+.welcome-card::after {
+
+    content: "";
+
+    position: absolute;
+
+    width: 180px;
+
+    height: 180px;
+
+    left: -80px;
+
+    bottom: -100px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(255, 255, 255, 0.08);
+
+    pointer-events: none;
+
+}
+
+
+/* =========================================
+   WELCOME CONTENT
+========================================= */
+
+.welcome-card-content {
+
+    position: relative;
+
+    z-index: 2;
+
+    flex: 1;
+
+    min-width: 0;
+
+}
+
+
+/* =========================================
+   WELCOME BADGE
+========================================= */
+
+.welcome-badge {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    max-width: 100%;
+
+    padding: 8px 17px;
+
+    background:
+        rgba(255, 255, 255, 0.95);
+
+    color: #ff4d00;
+
+    border-radius: 50px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    line-height: 1.2;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    box-shadow:
+        0 5px 15px
+        rgba(0, 0, 0, 0.08);
+
+}
+
+
+.welcome-badge i {
+
+    font-size: 14px;
+
+    flex-shrink: 0;
+
+}
+
+
+/* =========================================
+   WELCOME HEADING
+========================================= */
+
+.welcome-card h1 {
+
+    position: relative;
+
+    z-index: 2;
+
+    margin: 18px 0 12px;
+
+    color: #ffffff;
+
+    font-size: clamp(32px, 4vw, 52px);
+
+    font-weight: 700;
+
+    line-height: 1.05;
+
+    letter-spacing: -1px;
+
+}
+
+
+/* =========================================
+   WELCOME DESCRIPTION
+========================================= */
+
+.welcome-card p {
+
+    position: relative;
+
+    z-index: 2;
+
+    max-width: 580px;
+
+    margin: 0;
+
+    color:
+        rgba(255, 255, 255, 0.9);
+
+    font-size: 16px;
+
+    line-height: 1.7;
+
+}
+
+
+/* =========================================
+   BUTTON WRAPPER
+========================================= */
+
+.welcome-card-action {
+
+    position: relative;
+
+    z-index: 3;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+}
+
+
+/* =========================================
+   START WORKOUT BUTTON
+========================================= */
+
+.welcome-workout-btn {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 12px;
+
+    min-width: 190px;
+
+    min-height: 54px;
+
+    padding: 14px 24px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: #ffffff;
+
+    color: #ff4d00;
+
+    font-size: 15px;
+
+    font-weight: 700;
+
+    line-height: 1;
+
+    white-space: nowrap;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease,
+        background 0.3s ease,
+        color 0.3s ease;
+
+}
+
+
+.welcome-workout-btn:hover {
+
+    background: #111111;
+
+    color: #ffffff;
+
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 12px 25px
+        rgba(0, 0, 0, 0.25);
+
+}
+
+
+.welcome-workout-btn:active {
+
+    transform: translateY(-1px);
+
+}
+
+
+.welcome-workout-btn i {
+
+    font-size: 18px;
+
+    transition:
+        transform 0.3s ease;
+
+}
+
+
+.welcome-workout-btn:hover i {
+
+    transform: translateX(4px);
+
+}
+
+
+/* =========================================
+   LARGE TABLET
+========================================= */
+
+@media (max-width: 991px) {
+
+    .welcome-card {
+
+        gap: 30px;
+
+        padding: 40px;
+
+    }
+
+
+    .welcome-card h1 {
+
+        font-size: clamp(30px, 5vw, 44px);
+
+    }
+
+
+    .welcome-card p {
+
+        font-size: 15px;
+
+    }
+
+
+    .welcome-workout-btn {
+
+        min-width: 175px;
+
+    }
+
+}
+
+
+/* =========================================
+   TABLET / SMALL LAPTOP
+========================================= */
+
+@media (max-width: 767px) {
+
+    .welcome-card {
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+        gap: 28px;
+
+        padding: 35px 30px;
+
+        min-height: auto;
+
+    }
+
+
+    .welcome-card-content {
+
+        width: 100%;
+
+    }
+
+
+    .welcome-card h1 {
+
+        font-size: clamp(30px, 7vw, 42px);
+
+        line-height: 1.1;
+
+    }
+
+
+    .welcome-card p {
+
+        max-width: 100%;
+
+    }
+
+
+    .welcome-card-action {
+
+        width: 100%;
+
+    }
+
+
+    .welcome-workout-btn {
+
+        width: 100%;
+
+        min-width: 0;
+
+        min-height: 56px;
+
+    }
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 576px) {
+
+    .welcome-card {
+
+        gap: 24px;
+
+        padding: 28px 22px;
+
+        border-radius: 18px;
+
+    }
+
+
+    .welcome-badge {
+
+        max-width: 100%;
+
+        padding: 8px 13px;
+
+        font-size: 13px;
+
+    }
+
+
+    .welcome-card h1 {
+
+        margin: 16px 0 10px;
+
+        font-size: 32px;
+
+        line-height: 1.08;
+
+        letter-spacing: -0.5px;
+
+    }
+
+
+    .welcome-card p {
+
+        font-size: 14px;
+
+        line-height: 1.6;
+
+    }
+
+
+    .welcome-workout-btn {
+
+        width: 100%;
+
+        min-height: 54px;
+
+        padding: 14px 20px;
+
+        font-size: 15px;
+
+    }
+
+}
+
+
+/* =========================================
+   VERY SMALL MOBILE
+========================================= */
+
+@media (max-width: 380px) {
+
+    .welcome-card {
+
+        padding: 24px 18px;
+
+    }
+
+
+    .welcome-badge {
+
+        max-width: 100%;
+
+        font-size: 12px;
+
+    }
+
+
+    .welcome-card h1 {
+
+        font-size: 28px;
+
+    }
+
+
+    .welcome-card p {
+
+        font-size: 13px;
+
+    }
+
+
+    .welcome-workout-btn {
+
+        min-height: 52px;
+
+        padding: 13px 16px;
+
+    }
+
+}
+
+
+
+
+/* =========================================
+   BADGE
+========================================= */
+
+.badge {
+
+    background: #fff;
+
+    color: #ff4d00;
+
+    padding: 8px 18px;
+
+    border-radius: 40px;
+
+    font-weight: 600;
+
+}
+
+
+/* =========================================
+   DASHBOARD GRID
+========================================= */
+
+.dashboard-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(280px, 1fr)
+        );
+
+    gap: 25px;
+
+}
+
+
+/* =========================================
+   DASHBOARD CARD
+========================================= */
+
+.dashboard-card {
+
+    background: #111;
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.08);
+
+    border-radius: 20px;
+
+    padding: 30px;
+
+}
+
+.dashboard-card h3 {
+
+    margin-bottom: 25px;
+
+    color: #fff;
+
+}
+
+.dashboard-card h2 {
+
+    color: #ff7a00;
+
+}
+
+
+/* =========================================
+   DASHBOARD LIST
+========================================= */
+
+.dashboard-list {
+
+    padding-left: 18px;
+
+}
+
+.dashboard-list li {
+
+    margin: 14px 0;
+
+    color: #ddd;
+
+}
+
+
+/* =========================================
+   PROGRESS CIRCLE
+========================================= */
+
+.progress-circle {
+
+    width: 150px;
+
+    height: 150px;
+
+    border-radius: 50%;
+
+    border:
+        10px solid
+        #ff4d00;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    font-size: 35px;
+
+    margin: auto;
+
+    color: #fff;
+
+}
+
+
+/* =========================================
+   MINI BAR
+========================================= */
+
+.mini-bar {
+
+    height: 12px;
+
+    background: #222;
+
+    border-radius: 20px;
+
+    overflow: hidden;
+
+    margin-top: 20px;
+
+}
+
+.mini-fill {
+
+    width: 72%;
+
+    height: 100%;
+
+    background:
+        linear-gradient(
+            90deg,
+            #ff4d00,
+            #ff7a00
+        );
+
+}
+
+
+/* =========================================
+   DESKTOP
+========================================= */
+
+@media (min-width: 992px) {
+
+    .dashboard-nav-links {
+
+        display: flex !important;
+
+    }
+
+    .dashboard-menu-toggle {
+
+        display: none !important;
+
+    }
+
+    .dashboard-mobile-menu {
+
+        display: none !important;
+
+    }
+
+    .dashboard-menu-overlay {
+
+        display: none !important;
+
+    }
+
+}
+
+
+/* =========================================
+   TABLET + MOBILE
+========================================= */
+
+@media (max-width: 991px) {
+
+    /* Hide desktop links */
+
+    .dashboard-nav-links {
+
+        display: none !important;
+
+    }
+
+
+    /* Show hamburger */
+
+    .dashboard-menu-toggle {
+
+        display: block !important;
+
+        margin-left: 10px;
+
+    }
+
+
+    /* User profile */
+
+    .dashboard-user {
+
+        margin-left: auto;
+
+    }
+
+
+    /* Mobile overlay */
+
+    .dashboard-menu-overlay {
+
+        display: block;
+
+        position: fixed;
+
+        top: 0;
+
+        left: 0;
+
+        width: 100%;
+
+        height: 100vh;
+
+        background:
+            rgba(0, 0, 0, 0.7);
+
+        backdrop-filter:
+            blur(3px);
+
+        -webkit-backdrop-filter:
+            blur(3px);
+
+        z-index: 10000;
+
+        cursor: pointer;
+
+    }
+
+
+    /* Mobile side menu */
+
+    .dashboard-mobile-menu {
+
+        display: block;
+
+        position: fixed;
+
+        top: 0;
+
+        left: -350px;
+
+        width: 300px;
+
+        max-width: 85vw;
+
+        height: 100vh;
+
+        background: #121212;
+
+        z-index: 10002;
+
+        padding: 0;
+
+        overflow-y: auto;
+
+        box-shadow:
+            10px 0 30px
+            rgba(0, 0, 0, 0.6);
+
+        transition:
+            left 0.35s ease;
+
+    }
+
+
+    /* Open menu */
+
+    .dashboard-mobile-menu.mobile-menu-open {
+
+        left: 0;
+
+    }
+
+
+    /* Mobile header */
+
+    .dashboard-mobile-menu-header {
+
+        height: 80px;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: space-between;
+
+        padding:
+            0 20px 0 25px;
+
+        border-bottom:
+            1px solid
+            rgba(255, 255, 255, 0.08);
+
+    }
+
+
+    /* Mobile logo */
+
+    .dashboard-mobile-logo {
+
+        color: #ffffff;
+
+        font-family:
+            'Bebas Neue',
+            sans-serif;
+
+        font-size: 30px;
+
+        letter-spacing: 1px;
+
+    }
+
+
+    .dashboard-mobile-logo span {
+
+        color: #ff4d00;
+
+    }
+
+
+    /* Close button */
+
+    .dashboard-menu-close {
+
+        width: 42px;
+
+        height: 42px;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        padding: 0;
+
+        background:
+            transparent !important;
+
+        border: none !important;
+
+        color:
+            #ffffff !important;
+
+        font-size: 38px;
+
+        font-weight: 300;
+
+        line-height: 1;
+
+        cursor: pointer;
+
+        border-radius: 8px;
+
+        transition:
+            background 0.3s ease,
+            color 0.3s ease;
+
+    }
+
+
+    .dashboard-menu-close:hover {
+
+        background:
+            rgba(255, 255, 255, 0.08);
+
+        color:
+            #ff6a1a !important;
+
+    }
+
+
+    /* Mobile links */
+
+    .dashboard-mobile-links {
+
+        display: flex;
+
+        flex-direction: column;
+
+        gap: 5px;
+
+        list-style: none;
+
+        margin: 0;
+
+        padding: 25px 20px;
+
+    }
+
+
+    .dashboard-mobile-links li {
+
+        width: 100%;
+
+        list-style: none;
+
+    }
+
+
+    .dashboard-mobile-links li a {
+
+        display: block;
+
+        width: 100%;
+
+        padding: 14px 15px;
+
+        color:
+            #ffffff !important;
+
+        text-decoration: none;
+
+        border-radius: 8px;
+
+        font-size: 16px;
+
+        transition:
+            background 0.3s ease,
+            color 0.3s ease;
+
+    }
+
+
+    .dashboard-mobile-links li a:hover {
+
+        background:
+            rgba(255, 106, 26, 0.12);
+
+        color:
+            #ff6a1a !important;
+
+    }
+
+}
+
+
+/* =========================================
+   SMALL MOBILE
+========================================= */
+
+@media (max-width: 576px) {
+
+    .dashboard-mobile-menu {
+
+        width: 280px;
+
+    }
+
+
+    .dashboard-logo {
+
+        font-size: 28px;
+
+    }
+
+
+    .dashboard-menu-toggle {
+
+        width: 42px;
+
+        height: 42px;
+
+    }
+
+
+    .dashboard-menu-toggle span {
+
+        width: 26px;
+
+    }
+
+
+    .dashboard-user img {
+
+        width: 40px;
+
+        height: 40px;
+
+    }
+
+
+    .dashboard-navbar .pf-admin-btn {
+
+        min-width: auto;
+
+        padding:
+            7px;
+
+    }
+
+
+    .profile-username {
+
+        display: none;
+
+    }
+
+
+    .dashboard-profile-menu {
+
+        right: -5px;
+
+    }
+
+} 

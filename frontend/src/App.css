@@ -166,7 +166,7 @@ a { text-decoration: none; color: inherit; }
   margin-bottom: 1.2rem;
 }
 .preloader-bar {
-  width: 200px;
+  width: 510px;
   height: 3px;
   background: rgba(255, 255, 255, 0.08);
   border-radius: 10px;
@@ -744,7 +744,7 @@ a { text-decoration: none; color: inherit; }
 .stats-section {
   background: var(--bg-secondary);
   position: relative;
-  overflow: hidden;
+  overflow: hidden; 
 }
 .stats-bg {
   position: absolute; inset: 0;
